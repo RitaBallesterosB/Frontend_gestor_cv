@@ -1,0 +1,30 @@
+/* Estilos del footer */
+
+.footer {
+    width: 100%;
+    bottom: 0;
+    background-color: var(--azulCielo);
+    color: var(--blanco);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 3rem;
+    position: absolute;
+}
+
+.logoCopy {
+    display: flex;
+    align-items: center;
+}
+
+footer.img {
+    width: 5rem;
+    height: 5rem;
+
+}
+.copyRigth {
+    display: flex;
+    font-size: 16px;
+    font-weight: 700;
+    margin-left: 1rem;
+}

@@ -1,0 +1,26 @@
+@import "./normalize.css";
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet');
+
+/* Estilos generales */
+
+:root {
+  --azulCielo: #5ce1e6;
+  --blanco: #ffffff;
+  --negro: #000000;
+  --grisClaro: #edf0f4;
+  --grisRaton: #3b4754;
+  --grisMedio: #798da3;
+}
+
+html {
+  width: 100vw;
+  height: 100vh;
+  font-size: 10px;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  font-size: 14px;
+  font-family: "Open Sans", sans-serif
+}
