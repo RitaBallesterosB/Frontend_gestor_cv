@@ -1,5 +1,5 @@
-import { Login } from "./components/user/Login";
 import { Footer } from "./components/footer/Footer";
+import { Routing } from "./router/Routing";
 
 
 function App() {
@@ -7,7 +7,7 @@ function App() {
 
   return (
     <>
-      <Login />
+      <Routing/>
       <Footer />
     </>
   )

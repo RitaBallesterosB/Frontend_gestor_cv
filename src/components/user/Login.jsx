@@ -14,14 +14,16 @@ export const Login = () => {
           </p>
           <form className={styles.form}>
             <label htmlFor="email">Correo elelctrónico</label>
-            <input type="email" id="email" />
+            <input type="email" name="email" required />
             <label htmlFor="password">Contraseña</label>
-            <input type="password" id="password" />
+            <input type="password" name="password" required/>
             <a href="#">¿Olvidaste tu Contraseña?</a>
             <button type="submit"> Iniciar sesión</button>
           </form>
-          <p>¿Aún no eres un usuario registrado?</p>
-          <a href="#">Registrarse</a>
+          <div>
+            <p>¿Aún no eres un usuario registrado?</p>
+            <a href="#">Registrarse</a>
+          </div>
         </div>
       </div>
     </>
