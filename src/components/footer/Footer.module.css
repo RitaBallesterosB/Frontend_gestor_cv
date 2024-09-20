@@ -1,7 +1,7 @@
 /* Estilos del footer */
 
 .footer {
-    width: 100%;
+    width: 100vw;
     bottom: 0;
     background-color: var(--azulCielo);
     color: var(--blanco);
@@ -9,7 +9,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 2rem 3rem;
-    position: absolute;
+    position: relative;
 }
 
 .logoCopy {

@@ -1,0 +1,9 @@
+/* Estilos del header público */
+
+header {
+    background-color: var(--grisClaro);
+}
+
+header img {
+    margin-left: 2rem;
+}

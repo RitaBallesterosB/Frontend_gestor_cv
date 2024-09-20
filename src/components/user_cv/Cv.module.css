@@ -1,0 +1,46 @@
+/* Estilos de la hoja de vida */
+
+.contenedorCv {
+    padding: 2%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 90vh; /* Ajustado para asegurar cobertura vertical */
+    width: 80%; /* Ajustado para un mejor manejo de ancho */
+    margin: 0 auto; /* Centrado */
+
+}
+
+.contenedorCv h1 {
+    text-align: center;
+    color: var(--azulCielo);
+    padding-bottom: 2rem;
+}
+
+.subContenedorCv {
+    background-color: var(--gris);
+    display: flex;
+    flex-direction: column; /* Asegurando que todo está alineado verticalmente */
+    align-items: center;
+    justify-content: flex-start; /* Alineación al inicio */
+    padding: 2rem; /* Espacio interno */
+    width: 90%; /* Ocupar todo el ancho del contenedor padre */
+    max-width: 960px; /* Máximo ancho para controlar en grandes pantallas */
+}
+
+.formCv{
+    width: 95%; /* Utiliza todo el ancho del subcontenedor */
+    display: grid; /* Usar grid para mejor alineación de los elementos */
+    grid-template-columns: repeat(2, 1fr); /* Dos columnas de igual ancho */
+    gap: 1rem; /* Espacio entre los elementos de grid */
+    padding: 1rem; /* Espacio interno */
+}
+
+.contenedorInput .contenedorInput textarea{
+    width: 70%; 
+}
+
+.input label, .input input, .input select, .input textarea {
+    width: 100%; /* Asegura que cada elemento ocupa todo el espacio disponible */
+}
