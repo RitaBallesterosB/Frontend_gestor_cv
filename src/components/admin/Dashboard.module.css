@@ -1,0 +1,31 @@
+/* Estilos del dashboard */
+
+header {
+    text-align: center;
+    height: 15vh;
+}
+
+/* Estilos del sidebar */
+
+.contenedorSidebar {
+    background-color: var(--grisClaro);
+    float: left;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    align-items: center;
+}
+
+.btnAdmin {
+    font-family: "Open Sans";
+    font-weight:bold;
+    padding: 10px;
+    background-color: var(--grisMedio);
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
