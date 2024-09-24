@@ -2,10 +2,38 @@ import { HeaderPriv } from "../layouts/private/HeaderPriv";
 import { useForm } from "../../hooks/useForm";
 import { useEffect, useState } from "react";
 import styles from "./Cv.module.css";
+import { Global } from "../../helpers/Global";
+import useAuth from "../../hooks/useAuth";
 
 export const Cv = () => {
+  // Se recibe la información desde el Contexto a través del hook useAuth
+  const { auth } = useAuth();
+  console.log(auth); // Verifica qué datos estás obteniendo
+
+  // Estado para mostrar resultado del registro del user
+  const [saved, setSaved] = useState("not_saved");
+
+  // Variable para almacenar el token para las peticiones a realizar en este componente
+  const token = localStorage.getItem("token");
+
   // Usamos el hook personalizado useForm para cargar los datos del formulario
-  const { form, changed } = useForm({});
+  const { form, changed } = useForm({
+    nombre_usuario: auth.nombre || "", // Inicializa con los datos del usuario
+    apellido_usuario: auth.apellido || "",
+    correo_electronico: auth.correo_electronico || "",
+    celular: "",
+    tipo_documento: "",
+    numero_dto: "",
+    bio: "",
+    ocupacion: "",
+    region_residencia: "",
+    tiempo_experiencia: "",
+    area_ocupacion: "",
+    tipo_area_ocupacion: "",
+    aptitudes: ""
+  });
+
+  console.log(form)
 
   // Estado para almacenar las regiones
   const [municipios, setMunicipios] = useState([]);
@@ -30,6 +58,35 @@ export const Cv = () => {
     obtenerMunicipios();
   }, []); // [] asegura que se ejecute solo una vez cuando el componente se monta
 
+  const registerCv = async (e) => {
+    //prevenir que se actualice el navegador
+    e.preventDefault();
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("No se encontró el token de autenticación");
+        return;
+      }
+
+      // Petición para registrar la hoja de vida
+      const request = await fetch(Global.url + "user/hoja-de-vida", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": token,
+        },
+        body: JSON.stringify(form), // Enviamos el formulario como JSON
+      });
+
+      const data = await request.json();
+
+    } catch (error) {
+      console.error("Error al registrar la hoja de vida:", error);
+    }
+  };
+    
+
   return (
     <>
       <HeaderPriv />
@@ -37,7 +94,7 @@ export const Cv = () => {
         <h1>Hoja de vida</h1>
         <div className={styles.subContenedorCv}>
           <h3>Los campos con * son obligatorios</h3>
-          <form className={styles.formCv}>
+          <form className={styles.formCv} onSubmit={registerCv}>
             <div className={styles.contenedorInput}>
               <div className={styles.input}>
                 <label htmlFor="nombre_usuario">Primer nombre:</label>
@@ -45,18 +102,20 @@ export const Cv = () => {
                   type="text"
                   id="nombre_usuario"
                   name="nombre_usuario"
-                  onChange={changed}
                   value={form.nombre_usuario}
+                  readOnly
                 />
               </div>
               <div className={styles.input}>
-                <label htmlFor="apellido_usuario">Primer apellido:</label>
+                <label htmlFor="apellido_usuario">
+                  Primero apellido:
+                </label>
                 <input
                   type="text"
                   name="apellido_usuario"
                   id="apellido_usuario"
-                  onChange={changed}
                   value={form.apellido_usuario}
+                  readOnly
                 />
               </div>
             </div>
@@ -111,13 +170,15 @@ export const Cv = () => {
             </div>
             <div className={styles.contenedorInput}>
               <div className={styles.input}>
-                <label htmlFor="correo_electronico">Correo electrónico*:</label>
+                <label htmlFor="correo_electronico">
+                  Correo eléctronico:
+                </label>
                 <input
                   type="email"
                   id="correo_electronico"
                   name="correo_electronico"
                   value={form.correo_electronico}
-                  onChange={changed}
+                  readOnly
                 />
               </div>
               <div className={styles.input}>
@@ -181,7 +242,7 @@ export const Cv = () => {
               </label>
               <input
                 type="number"
-                placeholder="Ingrese su tiempo de experiencia"
+                placeholder="Ingrese su tiempo de experiencia en años"
                 name="tiempo_experiencia"
                 id="tiempo_experiencia"
                 onChange={changed}
@@ -305,13 +366,20 @@ export const Cv = () => {
                 </label>
                 <label htmlFor="aptitudes">
                   <input type="checkbox" id="aptitudes" name="aptitudes" />
-                   Control de costos
+                  Control de costos
                 </label>
                 <label htmlFor="aptitudes">
                   <input type="checkbox" id="aptitudes" name="aptitudes" />
                   Supervisión de reingeniería
                 </label>
               </div>
+            </div>
+            <div>
+              <input
+                className={styles.botonSubmit}
+                type="submit"
+                value="Registrar hoja de vida"
+             />
             </div>
           </form>
         </div>

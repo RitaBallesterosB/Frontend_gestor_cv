@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Global } from "../../helpers/Global";
 import { useForm } from "../../hooks/useForm";
 import { HeaderPub } from "../layouts/public/HeaderPub";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
+import useAuth from "../../hooks/useAuth";
+import Swal from "sweetalert2";
 
 export const Login = () => {
   // Estado para obtener los datos desde el formulario
@@ -16,7 +18,7 @@ export const Login = () => {
   const [logged, setLogged] = useState("not logged");
 
   // Estado para setear los valores del token y usuario en el contexto de la aplicación
-  //const { setAuth } = useAuth();
+  const { setAuth } = useAuth();
 
   const loginUser = async (e) => {
     // prevenir que se actualice el navegador
@@ -46,14 +48,14 @@ export const Login = () => {
       setLogged("logged");
 
       // Seteamos los datos del usuario en el Auth
-      //setAuth(data.user);
+      setAuth(data.user);
 
       // Limpiar el formulario
       resetForm();
 
       // Redirección
       setTimeout(() => {
-        window.location.reload();
+        navigate('/cv');
       }, 1000);
     } else {
       // Seteamos la variable de estado logged si no se autenticó el usuario
@@ -73,12 +75,26 @@ export const Login = () => {
               poder iniciar sesión
             </p>
           </div>
+          {/* Mensajes para el usuario */}
+          {logged === "logged" &&
+            Swal.fire({
+              icon: "success",
+              title: "¡Usuario autenticado correctamente!",
+              showConfirmButton: false
+            })}
+
+          {logged === "error" &&
+            Swal.fire({
+              icon: "error",
+              title: "¡El usuario no se ha autenticado!",
+              showConfirmButton: false
+            })}
           <form className={styles.form} onSubmit={loginUser}>
             <div className={styles.input}>
               <label htmlFor="email">Correo electrónico: </label>
               <input
                 type="email"
-                placeholder='Ingresa tu correo electrónico'
+                placeholder="Ingresa tu correo electrónico"
                 id="email"
                 name="correo_electronico"
                 value={form.correo_electronico}
@@ -91,7 +107,7 @@ export const Login = () => {
               <label htmlFor="password">Contraseña:</label>
               <input
                 type="password"
-                placeholder='Ingresa tu contraseña'
+                placeholder="Ingresa tu contraseña"
                 id="password"
                 name="password"
                 value={form.password}
@@ -101,11 +117,17 @@ export const Login = () => {
               />
             </div>
             {/* <a href="#">¿Olvidaste tu Contraseña?</a> */}
-            <input className={styles.botonSubmit} type="submit" value="Iniciar Sesión" />
+            <input
+              className={styles.botonSubmit}
+              type="submit"
+              value="Iniciar Sesión"
+            />
           </form>
           <div className={styles.input}>
             <p>¿Aún no eres un usuario registrado?</p>
-            <Link to={'/register'} className={styles.link}>Registrarse</Link>
+            <Link to={"/register"} className={styles.link}>
+              Registrarse
+            </Link>
           </div>
         </div>
       </div>

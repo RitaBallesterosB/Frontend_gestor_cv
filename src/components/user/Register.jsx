@@ -7,9 +7,16 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./Register.module.css";
 
+
 export const Register = () => {
   // Usamos el hook personalizado useForm para cargar los datos del formulario
-  const { form, changed } = useForm({});
+  const { form, changed } = useForm({
+    nombre: "",
+    apellido: "",
+    correo_electronico: "",
+    password: "",
+    imagen_perfil: null, // Inicialmente null para la imagen
+  });
   // Estado para mostrar resultado del registro del user
   const [saved, setSaved] = useState("not sended");
   // Hook para redirigir
@@ -20,17 +27,22 @@ export const Register = () => {
     // Prevenir que se actualice la pantalla
     e.preventDefault();
 
-    // Obtener los datos del formulario
-    let newUser = form;
-
-    // Petición a la API del Backend para guardar usuario en la BD
-    const request = await fetch(Global.url + "user/register", {
-      method: "POST",
-      body: JSON.stringify(newUser),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+     // Crear un FormData para enviar tanto texto como archivos
+     const formData = new FormData();
+     formData.append("nombre", form.nombre);
+     formData.append("apellido", form.apellido);
+     formData.append("correo_electronico", form.correo_electronico);
+     formData.append("password", form.password);
+ 
+     if (form.imagen_perfil) {
+       formData.append("imagen_perfil", form.imagen_perfil); // Añadir el archivo de imagen
+     }
+ 
+     // Petición a la API del Backend para guardar usuario en la BD
+     const request = await fetch(Global.url + "user/register", {
+       method: "POST",
+       body: formData, // Usamos FormData en lugar de JSON
+     });
 
     // Obtener la información retornada por la request
     const data = await request.json();
@@ -127,6 +139,18 @@ export const Register = () => {
                 value={form.password}
                 onChange={changed}
                 autoComplete="current-password"
+                required
+              />
+            </div>
+            <div className={styles.input}>
+              <label htmlFor="imagen_perfil">
+                Imagen de perfil*:
+              </label>
+              <input
+                type="file"
+                name="imagen_perfil"
+                id="imagen_perfil"
+                onChange={changed}
                 required
               />
             </div>
