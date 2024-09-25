@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react"; 
 import { Global } from "../../helpers/Global";
 import { useForm } from "../../hooks/useForm";
 import { HeaderPub } from "../layouts/public/HeaderPub";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Asegúrate de importar useNavigate
 import styles from "./Login.module.css";
 import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
@@ -19,6 +19,28 @@ export const Login = () => {
 
   // Estado para setear los valores del token y usuario en el contexto de la aplicación
   const { setAuth } = useAuth();
+
+  // Obtener la función navigate
+  const navigate = useNavigate(); // Aquí llamas a useNavigate
+
+  // useEffect para mostrar alertas basadas en el estado de logged
+  useEffect(() => {
+    if (logged === "logged") {
+      Swal.fire({
+        icon: "success",
+        title: "¡Usuario autenticado correctamente!",
+        showConfirmButton: false,
+        timer: 1500 // Desaparece después de 1.5 segundos
+      });
+    } else if (logged === "error") {
+      Swal.fire({
+        icon: "error",
+        title: "¡El usuario no se ha autenticado!",
+        showConfirmButton: false,
+        timer: 1500 // Desaparece después de 1.5 segundos
+      });
+    }
+  }, [logged]); // Se ejecuta cada vez que cambia `logged`
 
   const loginUser = async (e) => {
     // prevenir que se actualice el navegador
@@ -39,12 +61,12 @@ export const Login = () => {
     // Obtener la información retornada por la request
     const data = await request.json();
 
-    if (data.status == "success") {
+    if (data.status === "success") {
       // Guardar los datos del token y usuario en el localstorage del navegador
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      // Seteamos la variable de estado logged si se autenticó correctamente el usarios
+      // Seteamos la variable de estado logged si se autenticó correctamente el usuario
       setLogged("logged");
 
       // Seteamos los datos del usuario en el Auth
@@ -55,7 +77,7 @@ export const Login = () => {
 
       // Redirección
       setTimeout(() => {
-        navigate('/cv');
+        navigate('/cv'); // Ahora navigate está definido
       }, 1000);
     } else {
       // Seteamos la variable de estado logged si no se autenticó el usuario
@@ -75,20 +97,7 @@ export const Login = () => {
               poder iniciar sesión
             </p>
           </div>
-          {/* Mensajes para el usuario */}
-          {logged === "logged" &&
-            Swal.fire({
-              icon: "success",
-              title: "¡Usuario autenticado correctamente!",
-              showConfirmButton: false
-            })}
 
-          {logged === "error" &&
-            Swal.fire({
-              icon: "error",
-              title: "¡El usuario no se ha autenticado!",
-              showConfirmButton: false
-            })}
           <form className={styles.form} onSubmit={loginUser}>
             <div className={styles.input}>
               <label htmlFor="email">Correo electrónico: </label>
@@ -97,7 +106,7 @@ export const Login = () => {
                 placeholder="Ingresa tu correo electrónico"
                 id="email"
                 name="correo_electronico"
-                value={form.correo_electronico}
+                value={form?.correo_electronico || ""}
                 onChange={changed}
                 autoComplete="email"
                 required
@@ -110,13 +119,12 @@ export const Login = () => {
                 placeholder="Ingresa tu contraseña"
                 id="password"
                 name="password"
-                value={form.password}
+                value={form?.password || ""}
                 onChange={changed}
                 autoComplete="current-password"
                 required
               />
             </div>
-            {/* <a href="#">¿Olvidaste tu Contraseña?</a> */}
             <input
               className={styles.botonSubmit}
               type="submit"
