@@ -8,7 +8,6 @@ import useAuth from "../../hooks/useAuth";
 export const Cv = () => {
   // Se recibe la información desde el Contexto a través del hook useAuth
   const { auth } = useAuth();
-  console.log(auth); // Verifica qué datos estás obteniendo
 
   // Estado para mostrar resultado del registro del user
   const [saved, setSaved] = useState("not_saved");
@@ -16,9 +15,9 @@ export const Cv = () => {
   // Variable para almacenar el token para las peticiones a realizar en este componente
   const token = localStorage.getItem("token");
 
-  // Usamos el hook personalizado useForm para cargar los datos del formulario
-  const { form, changed } = useForm({
-    nombre_usuario: auth.nombre || "", // Inicializa con los datos del usuario
+  // Usamos el hook personalizado useForm
+  const { form, changed, resetForm } = useForm({
+    nombre_usuario: auth.nombre || "",
     apellido_usuario: auth.apellido || "",
     correo_electronico: auth.correo_electronico || "",
     celular: "",
@@ -30,10 +29,42 @@ export const Cv = () => {
     tiempo_experiencia: "",
     area_ocupacion: "",
     tipo_area_ocupacion: "",
-    aptitudes: ""
+    aptitudes: "",
   });
 
-  console.log(form)
+  // Efecto para precargar los datos del usuario
+  useEffect(() => {
+    if (auth) {
+      resetForm({
+        nombre_usuario: auth.nombre || "",
+        apellido_usuario: auth.apellido || "",
+        correo_electronico: auth.correo_electronico || "",
+        celular: "",
+        tipo_documento: "",
+        numero_dto: "",
+        bio: "",
+        ocupacion: "",
+        region_residencia: "",
+        tiempo_experiencia: "",
+        area_ocupacion: "",
+        tipo_area_ocupacion: "",
+        aptitudes: "",
+      });
+    }
+  }, [auth]); // Se ejecuta cuando 'auth' cambia
+
+  //Manejador de checkbox
+  const handleCheckboxChange = (e) => {
+    const { name, value, checked } = e.target;
+    changed({
+      target: {
+        name: name,
+        value: checked
+          ? [...(form[name] || []), value]
+          : form[name].filter((item) => item !== value),
+      },
+    });
+  };
 
   // Estado para almacenar las regiones
   const [municipios, setMunicipios] = useState([]);
@@ -63,29 +94,28 @@ export const Cv = () => {
     e.preventDefault();
 
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
         console.error("No se encontró el token de autenticación");
         return;
       }
+
+      console.log("Datos a enviar:", form);
 
       // Petición para registrar la hoja de vida
       const request = await fetch(Global.url + "user/hoja-de-vida", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": token,
+          Authorization: token,
         },
         body: JSON.stringify(form), // Enviamos el formulario como JSON
       });
 
       const data = await request.json();
-
     } catch (error) {
       console.error("Error al registrar la hoja de vida:", error);
     }
   };
-    
 
   return (
     <>
@@ -107,9 +137,7 @@ export const Cv = () => {
                 />
               </div>
               <div className={styles.input}>
-                <label htmlFor="apellido_usuario">
-                  Primero apellido:
-                </label>
+                <label htmlFor="apellido_usuario">Primero apellido:</label>
                 <input
                   type="text"
                   name="apellido_usuario"
@@ -155,24 +183,28 @@ export const Cv = () => {
                   id="celular"
                   onChange={changed}
                   value={form.celular || ""}
-                  required
+        
                 />
               </div>
               <div className={styles.input}>
                 <label htmlFor="tipo_documento">Tipo de documento*:</label>
-                <select id="tipo_documento" name="tipo_documento" required>
+                <select
+                  id="tipo_documento"
+                  name="tipo_documento"
+                  onChange={changed}
+                  value={form.tipo_documento || ""}
+                  required
+                >
                   <option value="">Seleccione un tipo de documento</option>
-                  <option value={form.tipo_documento}>CC</option>
-                  <option value={form.tipo_documento}>CE</option>
-                  <option value={form.tipo_documento}>PP</option>
+                  <option value="CC">CC</option>
+                  <option value="CE">CE</option>
+                  <option value="PP">PP</option>
                 </select>
               </div>
             </div>
             <div className={styles.contenedorInput}>
               <div className={styles.input}>
-                <label htmlFor="correo_electronico">
-                  Correo eléctronico:
-                </label>
+                <label htmlFor="correo_electronico">Correo eléctronico:</label>
                 <input
                   type="email"
                   id="correo_electronico"
@@ -184,7 +216,7 @@ export const Cv = () => {
               <div className={styles.input}>
                 <label htmlFor="numero_dto">Número de documento*:</label>
                 <input
-                  type="number"
+                  type="text"
                   placeholder="Ingrese su número de documento sin puntos ni comas"
                   name="numero_dto"
                   id="numero_dto"
@@ -199,6 +231,7 @@ export const Cv = () => {
               <textarea
                 placeholder="Ingresa una breve descripción acerca de su experiencia laboral"
                 id="bio"
+                name="bio"
                 value={form.bio}
                 onChange={changed}
                 required
@@ -224,6 +257,8 @@ export const Cv = () => {
                 <select
                   id="region_residencia"
                   name="region_residencia"
+                  value={form.region_residencia || ""}
+                  onChange={changed}
                   required
                 >
                   <option value="">Seleccione un Municipio</option>{" "}
@@ -261,7 +296,7 @@ export const Cv = () => {
                 autoComplete="file"
               />
             </div>
-            <div>
+            <div className={styles.contenedorCheckbox}>
               <span>A continuación elija su área de trabajo:</span>
               <div>
                 <label htmlFor="area_ocupacion">
@@ -269,6 +304,11 @@ export const Cv = () => {
                     type="checkbox"
                     id="area_ocupacion"
                     name="area_ocupacion"
+                    value="Ingeniería"
+                    checked={
+                      form.area_ocupacion?.includes("Ingeniería") || false
+                    }
+                    onChange={handleCheckboxChange}
                   />
                   Ingeniería
                 </label>
@@ -277,6 +317,11 @@ export const Cv = () => {
                     type="checkbox"
                     id="area_ocupacion"
                     name="area_ocupacion"
+                    value="Administración"
+                    checked={
+                      form.area_ocupacion?.includes("Administración") || false
+                    }
+                    onChange={handleCheckboxChange}
                   />
                   Administración
                 </label>
@@ -285,6 +330,11 @@ export const Cv = () => {
                     type="checkbox"
                     id="area_ocupacion"
                     name="area_ocupacion"
+                    value="Trabajo de campo"
+                    checked={
+                      form.area_ocupacion?.includes("Trabajo de campo") || false
+                    }
+                    onChange={handleCheckboxChange}
                   />
                   Trabajo de campo
                 </label>
@@ -298,6 +348,11 @@ export const Cv = () => {
                     type="checkbox"
                     id="tipo_area_ocupacion"
                     name="tipo_area_ocupacion"
+                    value="QAQC"
+                    checked={
+                      form.tipo_area_ocupacion?.includes("QAQC") || false
+                    }
+                    onChange={handleCheckboxChange}
                   />
                   QAQC
                 </label>
@@ -306,6 +361,13 @@ export const Cv = () => {
                     type="checkbox"
                     id="tipo_area_ocupacion"
                     name="tipo_area_ocupacion"
+                    value="Ingeniero residente"
+                    checked={
+                      form.tipo_area_ocupacion?.includes(
+                        "Ingeniero residente"
+                      ) || false
+                    }
+                    onChange={handleCheckboxChange}
                   />
                   Ingeniero Residente
                 </label>
@@ -314,6 +376,12 @@ export const Cv = () => {
                     type="checkbox"
                     id="tipo_area_ocupacion"
                     name="tipo_area_ocupacion"
+                    value="Oficina técnica"
+                    checked={
+                      form.tipo_area_ocupacion?.includes("Oficina técnica") ||
+                      false
+                    }
+                    onChange={handleCheckboxChange}
                   />
                   Oficina técnica
                 </label>
@@ -325,53 +393,93 @@ export const Cv = () => {
               </span>
               <div>
                 <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes" />
+                  <input
+                    type="checkbox"
+                    id="aptitudes"
+                    name="aptitudes"
+                    value="Autocad"
+                    checked={
+                      form.aptitudes?.includes("Autocad") || false
+                    }
+                    onChange={handleCheckboxChange}
+                  />
                   Autocad
                 </label>
                 <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes" />
+                  <input
+                    type="checkbox"
+                    id="aptitudes"
+                    name="aptitudes"
+                    value="Herramientas de ofimatica"
+                    checked={
+                      form.aptitudes?.includes(
+                        "Herramientas de ofimatica"
+                      ) || false
+                    }
+                    onChange={handleCheckboxChange}
+                  />
                   Herramientas de ofimatica
                 </label>
-                <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes" />
+                {/* <label htmlFor="aptitudes">
+                  <input type="checkbox" id="aptitudes" name="aptitudes" 
+                  value="Normas control de calidad"
+                  onChange={handleCheckboxChange}/>
                   Normas control de calidad
                 </label>
                 <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes" />
+                  <input type="checkbox" id="aptitudes" name="aptitudes" 
+                  value="Estandares de calidad"
+                  onChange={handleCheckboxChange}/>
                   Estandares de calidad
                 </label>
                 <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes" />
+                  <input type="checkbox" id="aptitudes" name="aptitudes" 
+                  value="Bases de datos"
+                  onChange={handleCheckboxChange}/>
                   Bases de datos
                 </label>
                 <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes" />
+                  <input type="checkbox" id="aptitudes" name="aptitudes"
+                  value="Manejo de herramientas de gestión de pruebas"
+                  onChange={handleCheckboxChange} />
                   Manejo de herramientas de gestión de pruebas
                 </label>
                 <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes" />
+                  <input type="checkbox" id="aptitudes" name="aptitudes"
+                  value="Manejo de herramientas de gestión de proyectos"
+                  onChange={handleCheckboxChange} />
                   Manejo de herramientas de gestión de proyectos
                 </label>
                 <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes" />
+                  <input type="checkbox" id="aptitudes" name="aptitudes" 
+                  value="Manejo de software de diseño"
+                  onChange={handleCheckboxChange}/>
                   Manejo software de diseño
                 </label>
                 <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes" />
+                  <input type="checkbox" id="aptitudes" name="aptitudes"
+                  value="Capacidad de análisis"
+                  onChange={handleCheckboxChange} />
                   Capacidad de análisis
                 </label>
                 <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes" />
+                  <input type="checkbox" id="aptitudes" name="aptitudes" 
+                  value="Gestión documental y planos"
+                  onChange={handleCheckboxChange}/>
                   Gestión documental y planos
                 </label>
                 <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes" />
+                  <input type="checkbox" id="aptitudes" name="aptitudes" 
+                  value="Control de costos"
+                  onChange={handleCheckboxChange}/>
                   Control de costos
                 </label>
                 <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes" />
+                  <input type="checkbox" id="aptitudes" name="aptitudes"
+                  value="Supervisión de reingeniería"
+                  onChange={handleCheckboxChange} />
                   Supervisión de reingeniería
-                </label>
+                </label> */}
               </div>
             </div>
             <div>
@@ -379,7 +487,7 @@ export const Cv = () => {
                 className={styles.botonSubmit}
                 type="submit"
                 value="Registrar hoja de vida"
-             />
+              />
             </div>
           </form>
         </div>

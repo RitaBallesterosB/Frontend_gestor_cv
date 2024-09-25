@@ -44,3 +44,11 @@
 .input label, .input input, .input select, .input textarea {
     width: 100%; /* Asegura que cada elemento ocupa todo el espacio disponible */
 }
+
+.contenedorCheckbox {
+    grid-column: span 2; /* Que ocupe las dos columnas del grid */
+    display: flex;
+    flex-wrap: wrap; /* Permitir que los checkboxes se distribuyan horizontalmente y bajen a la siguiente línea si es necesario */
+    justify-content: space-between; /* Separar uniformemente los checkboxes */
+    gap: 1rem; /* Espacio entre cada checkbox */
+}
