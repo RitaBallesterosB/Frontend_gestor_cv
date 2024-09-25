@@ -23,8 +23,8 @@ export const useForm = (initialObj = {}) => {
   };
 
   // Método para resetear el formulario a su estado inicial
-  const resetForm = () => {
-    setForm(initialObj);
+  const resetForm = (newValues) => {
+    setForm(newValues);
   };
 
   return {

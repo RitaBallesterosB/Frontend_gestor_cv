@@ -27,18 +27,87 @@ export const Cv = () => {
     ocupacion: "",
     region_residencia: "",
     tiempo_experiencia: "",
-    area_ocupacion: "",
-    tipo_area_ocupacion: "",
-    aptitudes: "",
+    areaOcupacion: "",
+    tipoOcupacion: "",
+    aptitudes: [],
   });
+
+  const [areasOcupacion, setAreasOcupacion] = useState([]);
+  const [tiposOcupacion, setTiposOcupacion] = useState([]);
+  const [aptitudes, setAptitudes] = useState([]);
+
+  // Fetch áreas de ocupación desde el backend
+  useEffect(() => {
+    const fetchAreasOcupacion = async () => {
+      try {
+        const response = await fetch(Global.url + "user/get-areas-ocupacion", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Error en la red al obtener áreas de ocupación");
+        }
+        const data = await response.json();
+        setAreasOcupacion(data.areasOcupacion);
+      } catch (error) {
+        console.error("Error fetching areas de ocupación:", error);
+      }
+    };
+
+    fetchAreasOcupacion();
+  }, [token]);
+
+  // Manejar cambio en el selector de área de ocupación
+  const handleAreaChange = (e) => {
+    const { value } = e.target;
+
+    changed({ target: { name: "areaOcupacion", value } });
+
+    // Aquí puedes gestionar los tipos de ocupación y aptitudes según la lógica que necesites
+    if (value) {
+      const selectedArea = areasOcupacion.find(
+        (area) => area.areaOcupacionId === value
+      );
+      if (selectedArea) {
+        setTiposOcupacion(selectedArea.tiposOcupacion);
+      } else {
+        setTiposOcupacion([]);
+      }
+      setAptitudes([]); // Reinicia las aptitudes
+    } else {
+      setTiposOcupacion([]);
+      setAptitudes([]);
+    }
+  };
+
+  // Manejar cambio en el selector de tipo de ocupación
+  const handleTipoChange = (e) => {
+    const { value } = e.target;
+
+    changed({ target: { name: "tipoOcupacion", value } });
+
+    const selectedTipo = tiposOcupacion.find(
+      (tipo) => tipo.tipoAreaOcupacionId === value
+    );
+    setAptitudes(selectedTipo ? selectedTipo.aptitudes : []);
+  };
 
   // Efecto para precargar los datos del usuario
   useEffect(() => {
-    if (auth) {
+    if (
+      auth &&
+      (form.nombre_usuario !== auth.nombre ||
+        form.apellido_usuario !== auth.apellido ||
+        form.correo_electronico !== auth.correo_electronico)
+    ) {
       resetForm({
         nombre_usuario: auth.nombre || "",
         apellido_usuario: auth.apellido || "",
         correo_electronico: auth.correo_electronico || "",
+
         celular: "",
         tipo_documento: "",
         numero_dto: "",
@@ -46,27 +115,13 @@ export const Cv = () => {
         ocupacion: "",
         region_residencia: "",
         tiempo_experiencia: "",
-        area_ocupacion: "",
-        tipo_area_ocupacion: "",
-        aptitudes: "",
+        areaOcupacion: "",
+        tipoOcupacion: "",
+        aptitudes: [],
       });
     }
-  }, [auth]); // Se ejecuta cuando 'auth' cambia
+  }, [auth, resetForm]);
 
-  //Manejador de checkbox
-  const handleCheckboxChange = (e) => {
-    const { name, value, checked } = e.target;
-    changed({
-      target: {
-        name: name,
-        value: checked
-          ? [...(form[name] || []), value]
-          : form[name].filter((item) => item !== value),
-      },
-    });
-  };
-
-  // Estado para almacenar las regiones
   const [municipios, setMunicipios] = useState([]);
 
   // Función para obtener las regiones desde la API
@@ -76,22 +131,24 @@ export const Cv = () => {
         "https://www.datos.gov.co/resource/xdk5-pm3f.json"
       );
       const data = await response.json();
-      // Filtramos para que las regiones no se repitan
       const municipiosUnicos = [...new Set(data.map((item) => item.municipio))];
-      setMunicipios(municipiosUnicos); // Guardamos las regiones en el estado
+      setMunicipios(municipiosUnicos);
     } catch (error) {
       console.error("Error al obtener los municipios:", error);
     }
   };
 
-  // Hacemos la solicitud a la API cuando el componente se monta
   useEffect(() => {
     obtenerMunicipios();
-  }, []); // [] asegura que se ejecute solo una vez cuando el componente se monta
+  }, []);
 
   const registerCv = async (e) => {
-    //prevenir que se actualice el navegador
     e.preventDefault();
+
+    const dataToSend = {
+      ...form,
+      aptitudes: form.aptitudes.filter((apt) => apt), // Filtrar valores vacíos
+    };
 
     try {
       if (!token) {
@@ -99,19 +156,19 @@ export const Cv = () => {
         return;
       }
 
-      console.log("Datos a enviar:", form);
+      console.log("Data to send:", dataToSend);
 
-      // Petición para registrar la hoja de vida
       const request = await fetch(Global.url + "user/hoja-de-vida", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: token,
         },
-        body: JSON.stringify(form), // Enviamos el formulario como JSON
+        body: JSON.stringify(dataToSend),
       });
 
       const data = await request.json();
+      console.log("Response del servidor:", data);
     } catch (error) {
       console.error("Error al registrar la hoja de vida:", error);
     }
@@ -125,6 +182,7 @@ export const Cv = () => {
         <div className={styles.subContenedorCv}>
           <h3>Los campos con * son obligatorios</h3>
           <form className={styles.formCv} onSubmit={registerCv}>
+            {/* Nombre y Apellido */}
             <div className={styles.contenedorInput}>
               <div className={styles.input}>
                 <label htmlFor="nombre_usuario">Primer nombre:</label>
@@ -177,13 +235,12 @@ export const Cv = () => {
               <div className={styles.input}>
                 <label htmlFor="celular">Celular*:</label>
                 <input
-                  type="number"
+                  type="text"
                   placeholder="Ingrese su número de celular"
                   name="celular"
                   id="celular"
                   onChange={changed}
                   value={form.celular || ""}
-        
                 />
               </div>
               <div className={styles.input}>
@@ -216,7 +273,7 @@ export const Cv = () => {
               <div className={styles.input}>
                 <label htmlFor="numero_dto">Número de documento*:</label>
                 <input
-                  type="text"
+                  type="number"
                   placeholder="Ingrese su número de documento sin puntos ni comas"
                   name="numero_dto"
                   id="numero_dto"
@@ -276,7 +333,7 @@ export const Cv = () => {
                 Tiempo de experiencia*:{" "}
               </label>
               <input
-                type="number"
+                type="text"
                 placeholder="Ingrese su tiempo de experiencia en años"
                 name="tiempo_experiencia"
                 id="tiempo_experiencia"
@@ -285,7 +342,7 @@ export const Cv = () => {
                 required
               />
             </div>
-            <div>
+            {/* <div>
               <label htmlFor="certificaciones_experiencia">
                 Certificaciones de experiencia: (Últimas 3 certificaciones)
               </label>
@@ -293,202 +350,88 @@ export const Cv = () => {
                 type="file"
                 name="certificaciones_experiencia"
                 id="certificaciones_experiencia"
+                onChange={changed}
                 autoComplete="file"
               />
+            </div> */}
+
+            {/* Área de Ocupación */}
+            <div className={styles.input}>
+              <label>Área de ocupación*:</label>
+              <select
+                name="areaOcupacion"
+                value={form.areaOcupacion || ""}
+                onChange={handleAreaChange}
+                required
+              >
+                <option value="">Seleccione un área</option>
+                {areasOcupacion.map((area) => (
+                  <option
+                    key={area.areaOcupacionId}
+                    value={area.areaOcupacionId}
+                  >
+                    {area.nombre}
+                  </option>
+                ))}
+              </select>
             </div>
-            <div className={styles.contenedorCheckbox}>
-              <span>A continuación elija su área de trabajo:</span>
-              <div>
-                <label htmlFor="area_ocupacion">
-                  <input
-                    type="checkbox"
-                    id="area_ocupacion"
-                    name="area_ocupacion"
-                    value="Ingeniería"
-                    checked={
-                      form.area_ocupacion?.includes("Ingeniería") || false
-                    }
-                    onChange={handleCheckboxChange}
-                  />
-                  Ingeniería
-                </label>
-                <label htmlFor="area_ocupacion">
-                  <input
-                    type="checkbox"
-                    id="area_ocupacion"
-                    name="area_ocupacion"
-                    value="Administración"
-                    checked={
-                      form.area_ocupacion?.includes("Administración") || false
-                    }
-                    onChange={handleCheckboxChange}
-                  />
-                  Administración
-                </label>
-                <label htmlFor="area_ocupacion">
-                  <input
-                    type="checkbox"
-                    id="area_ocupacion"
-                    name="area_ocupacion"
-                    value="Trabajo de campo"
-                    checked={
-                      form.area_ocupacion?.includes("Trabajo de campo") || false
-                    }
-                    onChange={handleCheckboxChange}
-                  />
-                  Trabajo de campo
-                </label>
+
+            {/* Tipos de Ocupación */}
+            {tiposOcupacion.length > 0 && (
+              <div className={styles.input}>
+                <label>Tipo de ocupación*:</label>
+                <select
+                  name="tipoOcupacion"
+                  value={form.tipoOcupacion || ""}
+                  onChange={handleTipoChange}
+                  required
+                >
+                  <option value="">Seleccione un tipo</option>
+                  {tiposOcupacion.map((tipo) => (
+                    <option
+                      key={tipo.tipoAreaOcupacionId}
+                      value={tipo.tipoAreaOcupacionId}
+                    >
+                      {tipo.nombre}
+                    </option>
+                  ))}
+                </select>
               </div>
-            </div>
-            <div>
-              <span>Seleccione la subespecialidad de su área de trabajo</span>
-              <div>
-                <label htmlFor="tipo_area_ocupacion">
-                  <input
-                    type="checkbox"
-                    id="tipo_area_ocupacion"
-                    name="tipo_area_ocupacion"
-                    value="QAQC"
-                    checked={
-                      form.tipo_area_ocupacion?.includes("QAQC") || false
-                    }
-                    onChange={handleCheckboxChange}
-                  />
-                  QAQC
-                </label>
-                <label htmlFor="tipo_area_ocupacion">
-                  <input
-                    type="checkbox"
-                    id="tipo_area_ocupacion"
-                    name="tipo_area_ocupacion"
-                    value="Ingeniero residente"
-                    checked={
-                      form.tipo_area_ocupacion?.includes(
-                        "Ingeniero residente"
-                      ) || false
-                    }
-                    onChange={handleCheckboxChange}
-                  />
-                  Ingeniero Residente
-                </label>
-                <label htmlFor="tipo_area_ocupacion">
-                  <input
-                    type="checkbox"
-                    id="tipo_area_ocupacion"
-                    name="tipo_area_ocupacion"
-                    value="Oficina técnica"
-                    checked={
-                      form.tipo_area_ocupacion?.includes("Oficina técnica") ||
-                      false
-                    }
-                    onChange={handleCheckboxChange}
-                  />
-                  Oficina técnica
-                </label>
+            )}
+
+            {/* Aptitudes */}
+            {aptitudes.length > 0 && (
+              <div className={styles.input}>
+                <label>Aptitudes*:</label>
+                {aptitudes.map((aptitud) => (
+                  <div key={aptitud._id}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        value={aptitud._id}
+                        onChange={(e) => {
+                          const { checked, value } = e.target;
+                          const updatedAptitudes = checked
+                            ? [...form.aptitudes, value]
+                            : form.aptitudes.filter((apt) => apt !== value);
+                          changed({
+                            target: {
+                              name: "aptitudes",
+                              value: updatedAptitudes,
+                            },
+                          });
+                        }}
+                      />
+                      {aptitud.nombre}
+                    </label>
+                  </div>
+                ))}
               </div>
-            </div>
-            <div>
-              <span>
-                Seleccione las aptitudes correspondientes a su subespecialidad
-              </span>
-              <div>
-                <label htmlFor="aptitudes">
-                  <input
-                    type="checkbox"
-                    id="aptitudes"
-                    name="aptitudes"
-                    value="Autocad"
-                    checked={
-                      form.aptitudes?.includes("Autocad") || false
-                    }
-                    onChange={handleCheckboxChange}
-                  />
-                  Autocad
-                </label>
-                <label htmlFor="aptitudes">
-                  <input
-                    type="checkbox"
-                    id="aptitudes"
-                    name="aptitudes"
-                    value="Herramientas de ofimatica"
-                    checked={
-                      form.aptitudes?.includes(
-                        "Herramientas de ofimatica"
-                      ) || false
-                    }
-                    onChange={handleCheckboxChange}
-                  />
-                  Herramientas de ofimatica
-                </label>
-                {/* <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes" 
-                  value="Normas control de calidad"
-                  onChange={handleCheckboxChange}/>
-                  Normas control de calidad
-                </label>
-                <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes" 
-                  value="Estandares de calidad"
-                  onChange={handleCheckboxChange}/>
-                  Estandares de calidad
-                </label>
-                <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes" 
-                  value="Bases de datos"
-                  onChange={handleCheckboxChange}/>
-                  Bases de datos
-                </label>
-                <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes"
-                  value="Manejo de herramientas de gestión de pruebas"
-                  onChange={handleCheckboxChange} />
-                  Manejo de herramientas de gestión de pruebas
-                </label>
-                <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes"
-                  value="Manejo de herramientas de gestión de proyectos"
-                  onChange={handleCheckboxChange} />
-                  Manejo de herramientas de gestión de proyectos
-                </label>
-                <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes" 
-                  value="Manejo de software de diseño"
-                  onChange={handleCheckboxChange}/>
-                  Manejo software de diseño
-                </label>
-                <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes"
-                  value="Capacidad de análisis"
-                  onChange={handleCheckboxChange} />
-                  Capacidad de análisis
-                </label>
-                <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes" 
-                  value="Gestión documental y planos"
-                  onChange={handleCheckboxChange}/>
-                  Gestión documental y planos
-                </label>
-                <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes" 
-                  value="Control de costos"
-                  onChange={handleCheckboxChange}/>
-                  Control de costos
-                </label>
-                <label htmlFor="aptitudes">
-                  <input type="checkbox" id="aptitudes" name="aptitudes"
-                  value="Supervisión de reingeniería"
-                  onChange={handleCheckboxChange} />
-                  Supervisión de reingeniería
-                </label> */}
-              </div>
-            </div>
-            <div>
-              <input
-                className={styles.botonSubmit}
-                type="submit"
-                value="Registrar hoja de vida"
-              />
-            </div>
+            )}
+
+            <button type="submit" className={styles.btnSubmit}>
+              Guardar
+            </button>
           </form>
         </div>
       </div>
