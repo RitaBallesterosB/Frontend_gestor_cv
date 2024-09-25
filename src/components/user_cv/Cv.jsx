@@ -278,7 +278,7 @@ export const Cv = () => {
               <div className={styles.input}>
                 <label htmlFor="numero_dto">Número de documento*:</label>
                 <input
-                  type="string"
+                  type="number"
                   placeholder="Ingrese su número de documento sin puntos ni comas"
                   name="numero_dto"
                   id="numero_dto"
@@ -338,7 +338,7 @@ export const Cv = () => {
                 Tiempo de experiencia*:{" "}
               </label>
               <input
-                type="text"
+                type="number"
                 placeholder="Ingrese su tiempo de experiencia en años"
                 name="tiempo_experiencia"
                 id="tiempo_experiencia"
