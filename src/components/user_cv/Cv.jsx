@@ -20,6 +20,7 @@ export const Cv = () => {
     nombre_usuario: auth.nombre || "",
     apellido_usuario: auth.apellido || "",
     correo_electronico: auth.correo_electronico || "",
+
     celular: "",
     tipo_documento: "",
     numero_dto: "",
@@ -145,8 +146,12 @@ export const Cv = () => {
   const registerCv = async (e) => {
     e.preventDefault();
 
+    const { areaOcupacion, tipoOcupacion, ...rest } = form;
+
     const dataToSend = {
-      ...form,
+      ...rest,
+      area_ocupacion: areaOcupacion, // Cambiar el nombre a area_ocupacion
+      tipo_area_ocupacion: tipoOcupacion, // Cambiar el nombre a tipo_area_ocupacion
       aptitudes: form.aptitudes.filter((apt) => apt), // Filtrar valores vacíos
     };
 
@@ -273,7 +278,7 @@ export const Cv = () => {
               <div className={styles.input}>
                 <label htmlFor="numero_dto">Número de documento*:</label>
                 <input
-                  type="number"
+                  type="string"
                   placeholder="Ingrese su número de documento sin puntos ni comas"
                   name="numero_dto"
                   id="numero_dto"
@@ -430,7 +435,7 @@ export const Cv = () => {
             )}
 
             <button type="submit" className={styles.btnSubmit}>
-              Guardar
+              Registrar hoja de vida
             </button>
           </form>
         </div>
