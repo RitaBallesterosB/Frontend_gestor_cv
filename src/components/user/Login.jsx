@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"; 
+import { useState, useEffect } from "react";
 import { Global } from "../../helpers/Global";
 import { useForm } from "../../hooks/useForm";
 import { HeaderPub } from "../layouts/public/HeaderPub";
@@ -30,14 +30,14 @@ export const Login = () => {
         icon: "success",
         title: "¡Usuario autenticado correctamente!",
         showConfirmButton: false,
-        timer: 1500 // Desaparece después de 1.5 segundos
+        timer: 1500, // Desaparece después de 1.5 segundos
       });
     } else if (logged === "error") {
       Swal.fire({
         icon: "error",
         title: "¡El usuario no se ha autenticado!",
         showConfirmButton: false,
-        timer: 1500 // Desaparece después de 1.5 segundos
+        timer: 1500, // Desaparece después de 1.5 segundos
       });
     }
   }, [logged]); // Se ejecuta cada vez que cambia `logged`
@@ -75,10 +75,15 @@ export const Login = () => {
       // Limpiar el formulario
       resetForm();
 
-      // Redirección
-      setTimeout(() => {
-        navigate('/cv'); // Ahora navigate está definido
-      }, 1000);
+      // Redirección según el rol del usuario
+      if (data.user.role === "ADMIN") {
+        navigate("/admin"); // Redirigir a admin si el rol es admin
+      } else {
+        // Redirigir a /cv para otros usuarios
+        setTimeout(() => {
+          navigate("/cv");
+        }, 1000);
+      }
     } else {
       // Seteamos la variable de estado logged si no se autenticó el usuario
       setLogged("error");
