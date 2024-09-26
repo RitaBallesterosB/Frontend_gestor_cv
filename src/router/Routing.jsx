@@ -7,6 +7,7 @@ import { HeaderPub } from "../components/layouts/public/HeaderPub";
 import { Dashboard } from "../components/admin/Dashboard";
 import { AuthProvider } from "../context/AuthProvider";
 import { CvRegistrada } from "../components/user_cv/CvRegistrada";
+import { CvModificada } from "../components/user_cv/cvModificada";
 
 export const Routing = () => {
   return (
@@ -22,6 +23,7 @@ export const Routing = () => {
           <Route>
             <Route path="cv" element={<Cv />} />
             <Route path="cv-registrada" element={<CvRegistrada/>}/>
+            <Route path="cv-modificada" element={<CvModificada/>}/>
           </Route>
           {/* Rutas para cargar los componentes del administrador */}
           <Route>

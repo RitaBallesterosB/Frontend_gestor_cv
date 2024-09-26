@@ -17,7 +17,7 @@ const NavPriv = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/modificar-cv" activeClassName="active">
+          <NavLink to="/cv-modificada" activeClassName="active">
             Modificar los datos del CV
           </NavLink>
         </li>
