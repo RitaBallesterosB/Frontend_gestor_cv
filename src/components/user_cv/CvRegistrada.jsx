@@ -2,42 +2,41 @@ import { HeaderPriv } from "../layouts/private/HeaderPriv";
 import { useEffect, useState } from "react";
 import styles from "./Cv.module.css";
 import { Global } from "../../helpers/Global";
-import useAuth from "../../hooks/useAuth";
 
 export const CvRegistrada = () => {
-  const { auth } = useAuth();
   const [cvData, setCvData] = useState(null);
 
   useEffect(() => {
     const fetchCvData = async () => {
-        try {
-          const token = localStorage.getItem("token");
-          if (!token) {
-            throw new Error("Token no disponible");
-          }
-
-          const response = await fetch(Global.url + "user/ver-cv-registrado", {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": token, // Asegúrate de que el formato sea correcto
-            },
-          });
-      
-          if (!response.ok) {
-            throw new Error("Error al obtener la hoja de vida registrada");
-          }
-      
-          const data = await response.json();
-          setCvData(data);
-        } catch (error) {
-          console.error("Error al obtener la hoja de vida registrada:", error);
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          throw new Error("Token no disponible");
         }
-      };
+
+        const response = await fetch(Global.url + "user/ver-cv-registrado", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": token,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Error al obtener la hoja de vida registrada");
+        }
+
+        const data = await response.json();
+        setCvData(data);
+      } catch (error) {
+        console.error("Error al obtener la hoja de vida registrada:", error);
+      }
+    };
+
     fetchCvData();
   }, []);
 
-  if (!cvData) {
+  if (!cvData || !cvData.cvData) {
     return (
       <>
         <HeaderPriv />
@@ -48,6 +47,22 @@ export const CvRegistrada = () => {
     );
   }
 
+  const { 
+    nombre_usuario, 
+    apellido_usuario, 
+    correo_usuario, 
+    celular, 
+    tipo_documento, 
+    numero_dto, 
+    bio, 
+    ocupacion, 
+    region_residencia, 
+    tiempo_experiencia, 
+    area_ocupacion, 
+    tipo_area_ocupacion, 
+    aptitudes 
+  } = cvData.cvData;
+
   return (
     <>
       <HeaderPriv />
@@ -57,42 +72,50 @@ export const CvRegistrada = () => {
           <h3>Información registrada</h3>
           <div className={styles.infoContainer}>
             <div className={styles.infoItem}>
-              <strong>Nombre:</strong> {cvData.nombre_usuario} {cvData.apellido_usuario}
+              <label>Nombre</label>
+              <input
+              value={nombre_usuario} 
+              />
             </div>
             <div className={styles.infoItem}>
-              <strong>Correo electrónico:</strong> {cvData.correo_electronico}
+              <label>apellido</label>
+              <input
+              value={apellido_usuario} 
+              />
             </div>
             <div className={styles.infoItem}>
-              <strong>Celular:</strong> {cvData.celular}
+              <strong>Correo electrónico:</strong> {correo_usuario}
             </div>
             <div className={styles.infoItem}>
-              <strong>Tipo de documento:</strong> {cvData.tipo_documento}
+              <strong>Celular:</strong> {celular}
             </div>
             <div className={styles.infoItem}>
-              <strong>Número de documento:</strong> {cvData.numero_dto}
+              <strong>Tipo de documento:</strong> {tipo_documento}
             </div>
             <div className={styles.infoItem}>
-              <strong>Bio:</strong> {cvData.bio}
+              <strong>Número de documento:</strong> {numero_dto}
             </div>
             <div className={styles.infoItem}>
-              <strong>Ocupación:</strong> {cvData.ocupacion}
+              <strong>Bio:</strong> {bio}
             </div>
             <div className={styles.infoItem}>
-              <strong>Municipio de residencia:</strong> {cvData.region_residencia}
+              <strong>Ocupación:</strong> {ocupacion}
             </div>
             <div className={styles.infoItem}>
-              <strong>Tiempo de experiencia:</strong> {cvData.tiempo_experiencia} años
+              <strong>Municipio de residencia:</strong> {region_residencia}
             </div>
             <div className={styles.infoItem}>
-              <strong>Área de ocupación:</strong> {cvData.area_ocupacion}
+              <strong>Tiempo de experiencia:</strong> {tiempo_experiencia} años
             </div>
             <div className={styles.infoItem}>
-              <strong>Tipo de ocupación:</strong> {cvData.tipo_area_ocupacion}
+              <strong>Área de ocupación:</strong> {area_ocupacion.nombre}
             </div>
             <div className={styles.infoItem}>
-  <strong>Aptitudes:</strong> {Array.isArray(cvData.aptitudes) ? cvData.aptitudes.join(", ") : "No especificado"}
-</div>
-
+              <strong>Tipo de ocupación:</strong> {tipo_area_ocupacion.nombre}
+            </div>
+            <div className={styles.infoItem}>
+              <strong>Aptitudes:</strong> {Array.isArray(aptitudes) ? aptitudes.map(apt => apt.nombre).join(", ") : "No especificado"}
+            </div>
           </div>
         </div>
       </div>
