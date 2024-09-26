@@ -1,37 +1,21 @@
 import { HeaderPriv } from "../layouts/private/HeaderPriv";
 import { useEffect, useState } from "react";
-import { useForm } from "../../hooks/useForm";
 import styles from "./Cv.module.css";
 import { Global } from "../../helpers/Global";
-import useAuth from "../../hooks/useAuth";
 
 export const CvModificada = () => {
-  const { auth } = useAuth();
-  const token = localStorage.getItem("token");
-  const [areasOcupacion, setAreasOcupacion] = useState([]);
-  const [tiposOcupacion, setTiposOcupacion] = useState([]);
-  const [aptitudes, setAptitudes] = useState([]);
-
   const [cvData, setCvData] = useState(null);
-  const { form, changed, resetForm } = useForm({
-    nombre_usuario: "",
-    apellido_usuario: "",
-    correo_electronico: "",
-    celular: "",
-    tipo_documento: "",
-    numero_dto: "",
-    bio: "",
-    ocupacion: "",
-    region_residencia: "",
-    tiempo_experiencia: "",
-    areaOcupacion: "",
-    tipoOcupacion: "",
-    aptitudes: [],
-  });
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({});
 
   useEffect(() => {
     const fetchCvData = async () => {
       try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          throw new Error("Token no disponible");
+        }
+
         const response = await fetch(Global.url + "user/ver-cv-registrado", {
           method: "GET",
           headers: {
@@ -46,148 +30,54 @@ export const CvModificada = () => {
 
         const data = await response.json();
         setCvData(data);
-        // Rellenar el formulario con los datos existentes
-        if (data && data.cvData) {
-          resetForm({
-            nombre_usuario: data.cvData.nombre_usuario,
-            apellido_usuario: data.cvData.apellido_usuario,
-            correo_electronico: data.cvData.correo_usuario,
-            celular: data.cvData.celular,
-            tipo_documento: data.cvData.tipo_documento,
-            numero_dto: data.cvData.numero_dto,
-            bio: data.cvData.bio,
-            ocupacion: data.cvData.ocupacion,
-            region_residencia: data.cvData.region_residencia,
-            tiempo_experiencia: data.cvData.tiempo_experiencia,
-            areaOcupacion: data.cvData.area_ocupacion.areaOcupacionId,
-            tipoOcupacion: data.cvData.tipo_area_ocupacion.tipoAreaOcupacionId,
-            aptitudes: data.cvData.aptitudes.map(apt => apt._id), // Asegúrate de que aptitudes tenga los IDs
-          });
-        }
+        setFormData(data.cvData); // Initialize formData with the fetched data
       } catch (error) {
         console.error("Error al obtener la hoja de vida registrada:", error);
       }
     };
 
     fetchCvData();
-  }, [resetForm, token]);
-
-  const [municipios, setMunicipios] = useState([]);
-
-  // Función para obtener las regiones desde la API
-  const obtenerMunicipios = async () => {
-    try {
-      const response = await fetch(
-        "https://www.datos.gov.co/resource/xdk5-pm3f.json"
-      );
-      const data = await response.json();
-      const municipiosUnicos = [...new Set(data.map((item) => item.municipio))];
-      setMunicipios(municipiosUnicos);
-    } catch (error) {
-      console.error("Error al obtener los municipios:", error);
-    }
-  };
-
-  useEffect(() => {
-    obtenerMunicipios();
   }, []);
 
-  // Fetch áreas de ocupación desde el backend
-  useEffect(() => {
-    const fetchAreasOcupacion = async () => {
-      try {
-        const response = await fetch(Global.url + "user/get-areas-ocupacion", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token,
-          },
-        });
-        if (!response.ok) {
-          throw new Error("Error en la red al obtener áreas de ocupación");
-        }
-        const data = await response.json();
-        setAreasOcupacion(data.areasOcupacion);
-      } catch (error) {
-        console.error("Error fetching areas de ocupación:", error);
-      }
-    };
-
-    fetchAreasOcupacion();
-  }, [token]);
-
-  // Manejar cambio en el selector de área de ocupación
-  const handleAreaChange = (e) => {
-    const { value } = e.target;
-
-    changed({ target: { name: "areaOcupacion", value } });
-
-    // Aquí puedes gestionar los tipos de ocupación y aptitudes según la lógica que necesites
-    if (value) {
-      const selectedArea = areasOcupacion.find(
-        (area) => area.areaOcupacionId === value
-      );
-      if (selectedArea) {
-        setTiposOcupacion(selectedArea.tiposOcupacion);
-      } else {
-        setTiposOcupacion([]);
-      }
-      setAptitudes([]); // Reinicia las aptitudes
-    } else {
-      setTiposOcupacion([]);
-      setAptitudes([]);
-    }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
   };
 
-  // Manejar cambio en el selector de tipo de ocupación
-  const handleTipoChange = (e) => {
-    const { value } = e.target;
-
-    changed({ target: { name: "tipoOcupacion", value } });
-
-    const selectedTipo = tiposOcupacion.find(
-      (tipo) => tipo.tipoAreaOcupacionId === value
-    );
-    setAptitudes(selectedTipo ? selectedTipo.aptitudes : []);
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing);
   };
 
-
-  const updateCv = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const { areaOcupacion, tipoOcupacion, ...rest } = form;
-
-    const dataToSend = {
-      ...rest,
-      area_ocupacion: areaOcupacion,
-      tipo_area_ocupacion: tipoOcupacion,
-      aptitudes: form.aptitudes.filter((apt) => apt),
-    };
-
+    // Add your API call to update the data here
     try {
-      if (!token) {
-        console.error("No se encontró el token de autenticación");
-        return;
-      }
-
-      const request = await fetch(Global.url + "user/modificar-cv", {
+      const token = localStorage.getItem("token");
+      const response = await fetch(Global.url + "user/modificar-cv", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           "Authorization": token,
         },
-        body: JSON.stringify(dataToSend),
+        body: JSON.stringify(formData),
       });
 
-      const data = await request.json();
-      console.log("Response del servidor:", data);
-      // Aquí puedes agregar un mensaje de éxito o redirigir si es necesario
+      if (!response.ok) {
+        throw new Error("Error al actualizar la hoja de vida");
+      }
+
+      const data = await response.json();
+      setCvData(data);
+      setIsEditing(false); // Exit edit mode
     } catch (error) {
       console.error("Error al actualizar la hoja de vida:", error);
     }
   };
 
-  if (!cvData) {
+  if (!cvData || !cvData.cvData) {
     return (
       <>
         <HeaderPriv />
@@ -198,194 +88,119 @@ export const CvModificada = () => {
     );
   }
 
+  const { 
+    nombre_usuario, 
+    apellido_usuario, 
+    correo_usuario, 
+    celular, 
+    tipo_documento, 
+    numero_dto, 
+    bio, 
+    ocupacion, 
+    region_residencia, 
+    tiempo_experiencia, 
+    area_ocupacion, 
+    tipo_area_ocupacion, 
+    aptitudes 
+  } = formData; // Use formData for displaying values
+
   return (
     <>
       <HeaderPriv />
       <div className={styles.contenedorCv}>
-        <h1>Modificar Hoja de Vida</h1>
-        <div className={styles.subContenedorCv}>
+        <h1>Hoja de vida registrada</h1>
+        <form onSubmit={handleSubmit} className={styles.subContenedorCv}>
           <h3>Información registrada</h3>
-          <form className={styles.formCv} onSubmit={updateCv}>
-            <div className={styles.contenedorInput}>
-              <div className={styles.input}>
-                <label>Nombre:</label>
-                <input
-                  type="text"
-                  name="nombre_usuario"
-                  value={form.nombre_usuario}
-                  onChange={changed}
-                  required
-                />
-              </div>
-              <div className={styles.input}>
-                <label>Apellido:</label>
-                <input
-                  type="text"
-                  name="apellido_usuario"
-                  value={form.apellido_usuario}
-                  onChange={changed}
-                  required
-                />
-              </div>
+          <div className={styles.infoContainer}>
+            <div className={styles.infoItem}>
+              <label>Nombre</label>
+              <input value={nombre_usuario} readOnly />
             </div>
-            <div className={styles.input}>
-              <label>Correo electrónico:</label>
-              <input
-                type="email"
-                name="correo_electronico"
-                value={form.correo_electronico}
-                onChange={changed}
-                required
-              />
+            <div className={styles.infoItem}>
+              <label>Apellido</label>
+              <input value={apellido_usuario} readOnly />
             </div>
-            <div className={styles.input}>
-              <label>Celular:</label>
-              <input
-                type="text"
+            <div className={styles.infoItem}>
+              <strong>Correo electrónico:</strong> {correo_usuario}
+            </div>
+            <div className={styles.infoItem}>
+              <strong>Celular:</strong>
+              <input 
                 name="celular"
-                value={form.celular}
-                onChange={changed}
-                required
+                value={celular} 
+                onChange={handleChange}
+                readOnly={!isEditing} // Make it editable only in edit mode
               />
             </div>
-            <div className={styles.input}>
-              <label>Tipo de documento:</label>
-              <select
-                name="tipo_documento"
-                value={form.tipo_documento}
-                onChange={changed}
-                required
-              >
-                <option value="">Seleccione un tipo de documento</option>
-                <option value="CC">CC</option>
-                <option value="CE">CE</option>
-                <option value="PP">PP</option>
-              </select>
+            <div className={styles.infoItem}>
+              <strong>Tipo de documento:</strong> {tipo_documento}
             </div>
-            <div className={styles.input}>
-              <label>Número de documento:</label>
-              <input
-                type="number"
-                name="numero_dto"
-                value={form.numero_dto}
-                onChange={changed}
-                required
-              />
+            <div className={styles.infoItem}>
+              <strong>Número de documento:</strong> {numero_dto}
             </div>
-            <div className={styles.input}>
-              <label>Bio:</label>
-              <textarea
+            <div className={styles.infoItem}>
+              <strong>Bio:</strong>
+              <input 
                 name="bio"
-                value={form.bio}
-                onChange={changed}
-                required
+                value={bio} 
+                onChange={handleChange}
+                readOnly={!isEditing} // Make it editable only in edit mode
               />
             </div>
-            <div className={styles.input}>
-              <label>Ocupación:</label>
-              <input
-                type="text"
+            <div className={styles.infoItem}>
+              <strong>Ocupación:</strong>
+              <input 
                 name="ocupacion"
-                value={form.ocupacion}
-                onChange={changed}
-                required
+                value={ocupacion} 
+                onChange={handleChange}
+                readOnly={!isEditing} // Make it editable only in edit mode
               />
             </div>
-            <div className={styles.input}>
-              <label>Municipio de residencia:</label>
-              <select
+            <div className={styles.infoItem}>
+              <strong>Municipio de residencia:</strong>
+              <input 
                 name="region_residencia"
-                value={form.region_residencia}
-                onChange={changed}
-                required
-              >
-                <option value="">Seleccione un Municipio</option>
-                {municipios.map((municipio, index) => (
-                    <option key={index} value={municipio}>
-                      {municipio}
-                    </option>
-                  ))}
-              </select>
-            </div>
-            <div className={styles.input}>
-              <label>Tiempo de experiencia:</label>
-              <input
-                type="number"
-                name="tiempo_experiencia"
-                value={form.tiempo_experiencia}
-                onChange={changed}
-                required
+                value={region_residencia} 
+                onChange={handleChange}
+                readOnly={!isEditing} // Make it editable only in edit mode
               />
             </div>
-            <div className={styles.input}>
-              <label>Área de ocupación:</label>
-              <select
-                name="areaOcupacion"
-                value={form.areaOcupacion}
-                onChange={handleAreaChange}
-                required
-              >
-                <option value="">Seleccione un área</option>
-                {areasOcupacion.map((area) => (
-                  <option
-                    key={area.areaOcupacionId}
-                    value={area.areaOcupacionId}
-                  >
-                    {area.nombre}
-                  </option>
-                ))}
-              </select>
+            <div className={styles.infoItem}>
+              <strong>Tiempo de experiencia:</strong>
+              <input 
+                name="tiempo_experiencia"
+                value={tiempo_experiencia} 
+                onChange={handleChange}
+                readOnly={!isEditing} // Make it editable only in edit mode
+              />
             </div>
-            <div className={styles.input}>
-              <label>Tipo de ocupación:</label>
-              <select
-                name="tipoOcupacion"
-                value={form.tipoOcupacion}
-                onChange={handleTipoChange}
-                required
-              >
-                <option value="">Seleccione un tipo</option>
-                {tiposOcupacion.map((tipo) => (
-                    <option
-                      key={tipo.tipoAreaOcupacionId}
-                      value={tipo.tipoAreaOcupacionId}
-                    >
-                      {tipo.nombre}
-                    </option>
-                  ))}
-              </select>
+            <div className={styles.infoItem}>
+              <strong>Área de ocupación:</strong>
+              <input 
+                name="area_ocupacion"
+                value={area_ocupacion?.nombre} 
+                onChange={handleChange}
+                readOnly={!isEditing} // Make it editable only in edit mode
+              />
             </div>
-            <div className={styles.input}>
-              <label>Aptitudes:</label>
-              {aptitudes.map((aptitud) => (
-                  <div key={aptitud._id}>
-                    <label>
-                      <input
-                        type="checkbox"
-                        value={aptitud._id}
-                        onChange={(e) => {
-                          const { checked, value } = e.target;
-                          const updatedAptitudes = checked
-                            ? [...form.aptitudes, value]
-                            : form.aptitudes.filter((apt) => apt !== value);
-                          changed({
-                            target: {
-                              name: "aptitudes",
-                              value: updatedAptitudes,
-                            },
-                          });
-                        }}/>
-                        {aptitud.nombre}
-                    </label>
-                  </div>
-                  ))}
+            <div className={styles.infoItem}>
+              <strong>Tipo de ocupación:</strong>
+              <input 
+                name="tipo_area_ocupacion"
+                value={tipo_area_ocupacion?.nombre} 
+                onChange={handleChange}
+                readOnly={!isEditing} // Make it editable only in edit mode
+              />
             </div>
-
-            <button type="submit" className={styles.btnSubmit}>
-              Guardar cambios
-            </button>
-          </form>
-        </div>
+            <div className={styles.infoItem}>
+              <strong>Aptitudes:</strong> {Array.isArray(aptitudes) ? aptitudes.map(apt => apt.nombre).join(", ") : "No especificado"}
+            </div>
+          </div>
+          <button type="button" onClick={handleEditToggle}>
+            {isEditing ? "Cancelar" : "Editar"}
+          </button>
+          {isEditing && <button type="submit">Guardar cambios</button>}
+        </form>
       </div>
     </>
   );
