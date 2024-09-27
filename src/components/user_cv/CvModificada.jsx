@@ -11,8 +11,6 @@ export const CvModificada = () => {
   const [tiposOcupacion, setTiposOcupacion] = useState([]);
   const [aptitudes, setAptitudes] = useState([]);
   const [selectedAptitudes, setSelectedAptitudes] = useState([]);
- 
-
 
   useEffect(() => {
     const fetchCvData = async () => {
@@ -26,7 +24,7 @@ export const CvModificada = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": token,
+            Authorization: token,
           },
         });
 
@@ -38,11 +36,7 @@ export const CvModificada = () => {
         setCvData(data);
         setFormData(data.cvData);
 
-         // Verifica la estructura de aptitudes
-    console.log("Aptitudes recibidas:", data.cvData.aptitudes);
-    setSelectedAptitudes(data.cvData.aptitudes.map(apt => apt._id) || []); // Asegúrate de usar el campo correcto
-
-
+        setSelectedAptitudes(data.cvData.aptitudes.map((apt) => apt._id) || []); // Asegúrate de usar el campo correcto
       } catch (error) {
         console.error("Error al obtener la hoja de vida registrada:", error);
       }
@@ -59,7 +53,7 @@ export const CvModificada = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": token,
+            Authorization: token,
           },
         });
         if (!response.ok) {
@@ -95,38 +89,37 @@ export const CvModificada = () => {
       }));
     }
   };
-  
-  
+
   const handleAreaChange = (e) => {
     const { value } = e.target;
-  
+
     // Actualizar formData al cambiar el área
-    const selectedArea = areasOcupacion.find(area => area.areaOcupacionId === value);
-    setFormData(prevState => ({
+    const selectedArea = areasOcupacion.find(
+      (area) => area.areaOcupacionId === value
+    );
+    setFormData((prevState) => ({
       ...prevState,
-      area_ocupacion: selectedArea // Actualiza el área ocupación en formData
+      area_ocupacion: selectedArea, // Actualiza el área ocupación en formData
     }));
-  
+
     setTiposOcupacion(selectedArea ? selectedArea.tiposOcupacion : []);
     setAptitudes([]); // Reinicia las aptitudes al cambiar el área
   };
 
-
-
   const handleTipoChange = (e) => {
     const { value } = e.target;
-  
+
     // Actualizar formData al cambiar el tipo
-    const selectedTipo = tiposOcupacion.find(tipo => tipo.tipoAreaOcupacionId === value);
-    setFormData(prevState => ({
+    const selectedTipo = tiposOcupacion.find(
+      (tipo) => tipo.tipoAreaOcupacionId === value
+    );
+    setFormData((prevState) => ({
       ...prevState,
-      tipo_area_ocupacion: selectedTipo // Actualiza el tipo ocupación en formData
+      tipo_area_ocupacion: selectedTipo, // Actualiza el tipo ocupación en formData
     }));
-  
+
     setAptitudes(selectedTipo ? selectedTipo.aptitudes : []);
   };
-
-
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
@@ -138,12 +131,12 @@ export const CvModificada = () => {
       const token = localStorage.getItem("token");
 
       console.log("Datos del formulario:", formData);
-      
+
       const response = await fetch(Global.url + "user/modificar-cv", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": token,
+          Authorization: token,
         },
         body: JSON.stringify(formData),
       });
@@ -154,7 +147,7 @@ export const CvModificada = () => {
 
       const data = await response.json();
       setCvData(data);
-      setSuccessMessage("Hoja de vida actualizada con éxito."); // Mensaje de éxito
+      window.location.reload();
       setIsEditing(false); // Exit edit mode
     } catch (error) {
       console.error("Error al actualizar la hoja de vida:", error);
@@ -173,9 +166,11 @@ export const CvModificada = () => {
   }
 
   const {
-    _id:_id, 
+    _id: _id,
     nombre_usuario,
     apellido_usuario,
+    segundo_nombre,
+    segundo_apellido,
     correo_usuario,
     celular,
     tipo_documento,
@@ -192,72 +187,100 @@ export const CvModificada = () => {
     <>
       <HeaderPriv />
       <div className={styles.contenedorCv}>
-        <h1>Hoja de vida registrada</h1>
-        <form onSubmit={handleSubmit} className={styles.subContenedorCv}>
+        <h1>Modificar hoja de vida</h1>
+        <div className={styles.subContenedorCv}>
           <h3>Información registrada</h3>
-          <div className={styles.infoContainer}>
-            <div className={styles.infoItem}>
-              <label>Nombre</label>
-              <input
-                type="text"
-                name="nombre_usuario"
-                value={nombre_usuario || ""}
-                onChange={handleChange}
-                disabled={true}
-              />
+          <form onSubmit={handleSubmit} className={styles.formCv}>
+            <div className={styles.contenedorInput}>
+              <div className={styles.input}>
+                <label>Primer nombre</label>
+                <input
+                  type="text"
+                  name="nombre_usuario"
+                  value={nombre_usuario || ""}
+                  onChange={handleChange}
+                  disabled={true}
+                />
+              </div>
+              <div className={styles.input}>
+                <label>Primer apellido</label>
+                <input
+                  type="text"
+                  name="apellido_usuario"
+                  value={apellido_usuario || ""}
+                  onChange={handleChange}
+                  disabled={true}
+                />
+              </div>
             </div>
-            <div className={styles.infoItem}>
-              <label>Apellido</label>
-              <input
-                type="text"
-                name="apellido_usuario"
-                value={apellido_usuario || ""}
-                onChange={handleChange}
-                disabled={true}
-              />
+            <div className={styles.contenedorInput}>
+              <div className={styles.input}>
+                <label>Segundo nombre</label>
+                <input
+                  type="text"
+                  name="segundo_nombre"
+                  onChange={handleChange}
+                  value={segundo_nombre || ""}
+                  disabled={true}
+                />
+              </div>
+              <div className={styles.input}>
+                <label>Segundo apellido</label>
+                <input
+                  type="text"
+                  name="segundo_apellido"
+                  onChange={handleChange}
+                  value={segundo_apellido || ""}
+                  disabled={true}
+                />
+              </div>
             </div>
-            <div className={styles.infoItem}>
-              <label>Correo</label>
-              <input
-                type="email"
-                name="correo_usuario"
-                value={correo_usuario || ""}
-                onChange={handleChange}
-                disabled={true}
-              />
+            <div>
+              <div className={styles.input}>
+                <label>Correo eléctronico</label>
+                <input
+                  type="email"
+                  name="correo_usuario"
+                  value={correo_usuario || ""}
+                  onChange={handleChange}
+                  disabled={true}
+                />
+              </div>
+              <div className={styles.input}>
+                <label>Tipo de documento</label>
+                <input
+                  type="text"
+                  name="tipo_documento"
+                  value={tipo_documento || ""}
+                  onChange={handleChange}
+                  disabled={true}
+                />
+              </div>
             </div>
-            <div className={styles.infoItem}>
-              <label>Celular</label>
-              <input
-                type="text"
-                name="celular"
-                value={celular || ""}
-                onChange={handleChange}
-                disabled={!isEditing}
-              />
+            <div>
+              <div className={styles.input}>
+                <label>Celular</label>
+                <input
+                  type="text"
+                  name="celular"
+                  value={celular || ""}
+                  onChange={handleChange}
+                  disabled={!isEditing}
+                />
+              </div>
+              <div className={styles.input}>
+                <label>Número de documento</label>
+                <input
+                  type="text"
+                  name="numero_dto"
+                  value={numero_dto || ""}
+                  onChange={handleChange}
+                  disabled={true}
+                />
+              </div>
             </div>
-            <div className={styles.infoItem}>
-              <label>Tipo de documento</label>
-              <input
-                type="text"
-                name="tipo_documento"
-                value={tipo_documento || ""}
-                onChange={handleChange}
-                disabled={true}
-              />
-            </div>
-            <div className={styles.infoItem}>
-              <label>Número de documento</label>
-              <input
-                type="text"
-                name="numero_dto"
-                value={numero_dto || ""}
-                onChange={handleChange}
-                disabled={true}
-              />
-            </div>
-            <div className={styles.infoItem}>
-              <label>Biografía</label>
+            <div className={styles.input}>
+              <label>Bio</label>
               <textarea
                 name="bio"
                 value={bio || ""}
@@ -265,7 +288,7 @@ export const CvModificada = () => {
                 disabled={!isEditing}
               />
             </div>
-            <div className={styles.infoItem}>
+            <div className={styles.input}>
               <label>Ocupación</label>
               <input
                 type="text"
@@ -275,8 +298,8 @@ export const CvModificada = () => {
                 disabled={!isEditing}
               />
             </div>
-            <div className={styles.infoItem}>
-              <label>Región de residencia</label>
+            <div className={styles.input}>
+              <label>Municipio de residencia</label>
               <input
                 type="text"
                 name="region_residencia"
@@ -285,8 +308,8 @@ export const CvModificada = () => {
                 disabled={!isEditing}
               />
             </div>
-            <div className={styles.infoItem}>
-              <label>Años de experiencia</label>
+            <div className={styles.input}>
+              <label> Tiempo de experiencia</label>
               <input
                 type="number"
                 name="tiempo_experiencia"
@@ -345,35 +368,33 @@ export const CvModificada = () => {
               )}
             </div>
             <div className={styles.input}>
-            <strong>Aptitudes:</strong>
-            {aptitudes.length > 0 ? (
-              aptitudes.map((apt) => (
-                <div key={apt.aptitudId}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      name="aptitudes"
-                      value={apt._id} // Asegúrate de que este valor sea único
-                      checked={selectedAptitudes.includes(apt._id)}
-                      onChange={handleChange}
-                      disabled={!isEditing}
-                    />
-                    {apt.nombre}
-                  </label>
-                </div>
-              ))
-            ) : (
-              <p>No hay aptitudes disponibles</p>
-            )}
-          </div>
-
-
-          </div>
-          <button type="button" onClick={handleEditToggle}>
-            {isEditing ? "Cancelar" : "Editar"}
-          </button>
-          {isEditing && <button type="submit">Guardar cambios</button>}
-        </form>
+              <strong>Aptitudes:</strong>
+              {aptitudes.length > 0 ? (
+                aptitudes.map((apt) => (
+                  <div key={apt.aptitudId}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        name="aptitudes"
+                        value={apt._id} // Asegúrate de que este valor sea único
+                        checked={selectedAptitudes.includes(apt._id)}
+                        onChange={handleChange}
+                        disabled={!isEditing}
+                      />
+                      {apt.nombre}
+                    </label>
+                  </div>
+                ))
+              ) : (
+                <p>No hay aptitudes disponibles</p>
+              )}
+            </div>
+            <button type="button" onClick={handleEditToggle} className={styles.btnSubmit}>
+              {isEditing ? "Cancelar" : "Editar"}
+            </button>
+            {isEditing && <button type="submit" className={styles.btnSubmit}>Guardar cambios</button>}
+          </form>
+        </div>
       </div>
     </>
   );

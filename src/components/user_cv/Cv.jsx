@@ -4,10 +4,16 @@ import { useEffect, useState } from "react";
 import styles from "./Cv.module.css";
 import { Global } from "../../helpers/Global";
 import useAuth from "../../hooks/useAuth";
+import avatar from "../../assets/img/default.png";
 
 export const Cv = () => {
   // Se recibe la información desde el Contexto a través del hook useAuth
   const { auth } = useAuth();
+
+  const profileImage =
+    auth.imagen_perfil && auth.imagen_perfil !== "default.png"
+      ? auth.imagen_perfil
+      : avatar;
 
   // Estado para mostrar resultado del registro del user
   const [saved, setSaved] = useState("not_saved");
@@ -186,6 +192,11 @@ export const Cv = () => {
         <h1>Hoja de vida</h1>
         <div className={styles.subContenedorCv}>
           <h3>Los campos con * son obligatorios</h3>
+          <img
+            src={profileImage}
+            className={styles.userphoto}
+            alt="Foto de perfil"
+          />
           <form className={styles.formCv} onSubmit={registerCv}>
             {/* Nombre y Apellido */}
             <div className={styles.contenedorInput}>
@@ -299,7 +310,6 @@ export const Cv = () => {
                 required
               />
             </div>
-            <div className={styles.contenedorInput}>
               <div className={styles.input}>
                 <label htmlFor="ocupacion">Ocupación*: </label>
                 <input
@@ -332,7 +342,6 @@ export const Cv = () => {
                   ))}
                 </select>
               </div>
-            </div>
             <div className={styles.input}>
               <label htmlFor="tiempo_experiencia">
                 Tiempo de experiencia*:{" "}
@@ -347,19 +356,6 @@ export const Cv = () => {
                 required
               />
             </div>
-            {/* <div>
-              <label htmlFor="certificaciones_experiencia">
-                Certificaciones de experiencia: (Últimas 3 certificaciones)
-              </label>
-              <input
-                type="file"
-                name="certificaciones_experiencia"
-                id="certificaciones_experiencia"
-                onChange={changed}
-                autoComplete="file"
-              />
-            </div> */}
-
             {/* Área de Ocupación */}
             <div className={styles.input}>
               <label>Área de ocupación*:</label>
@@ -380,7 +376,6 @@ export const Cv = () => {
                 ))}
               </select>
             </div>
-
             {/* Tipos de Ocupación */}
             {tiposOcupacion.length > 0 && (
               <div className={styles.input}>
@@ -403,37 +398,37 @@ export const Cv = () => {
                 </select>
               </div>
             )}
-
             {/* Aptitudes */}
             {aptitudes.length > 0 && (
               <div className={styles.input}>
                 <label>Aptitudes*:</label>
-                {aptitudes.map((aptitud) => (
-                  <div key={aptitud._id}>
-                    <label>
-                      <input
-                        type="checkbox"
-                        value={aptitud._id}
-                        onChange={(e) => {
-                          const { checked, value } = e.target;
-                          const updatedAptitudes = checked
-                            ? [...form.aptitudes, value]
-                            : form.aptitudes.filter((apt) => apt !== value);
-                          changed({
-                            target: {
-                              name: "aptitudes",
-                              value: updatedAptitudes,
-                            },
-                          });
-                        }}
-                      />
-                      {aptitud.nombre}
-                    </label>
-                  </div>
-                ))}
+                <div className={styles.contenedorAptitudes}>
+                  {aptitudes.map((aptitud) => (
+                    <div key={aptitud._id} className={styles.aptitudItem}>
+                      <label>
+                        <input
+                          type="checkbox"
+                          value={aptitud._id}
+                          onChange={(e) => {
+                            const { checked, value } = e.target;
+                            const updatedAptitudes = checked
+                              ? [...form.aptitudes, value]
+                              : form.aptitudes.filter((apt) => apt !== value);
+                            changed({
+                              target: {
+                                name: "aptitudes",
+                                value: updatedAptitudes,
+                              },
+                            });
+                          }}
+                        />
+                        {aptitud.nombre}
+                      </label>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
-
             <button type="submit" className={styles.btnSubmit}>
               Registrar hoja de vida
             </button>

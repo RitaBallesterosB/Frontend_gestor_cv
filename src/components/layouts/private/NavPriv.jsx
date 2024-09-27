@@ -1,55 +1,41 @@
 import { NavLink } from "react-router-dom";
-import { useEffect, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
-import avatar from '../../../assets/img/default.png'
+import avatar from '../../../assets/img/default.png';
+import styles from './Private.module.css';
 
 const NavPriv = () => {
   const { auth } = useAuth();
   // Asumimos que auth tiene la siguiente estructura
   // { token, nombre, apellido, imagen_perfil, initials }
 
+  const profileImage = auth.imagen_perfil && auth.imagen_perfil !== "default.png"
+    ? auth.imagen_perfil
+    : avatar;
+
   return (
-    <nav className="nav-priv">
-      <ul className="nav-menu">
+    <nav className={styles.navpriv}>
+      <ul className={styles.navmenu}>
         <li>
-          <NavLink to="/cv-registrada" activeClassName="active">
+          <NavLink to="/cv-registrada" activeClassName={styles.active}>
             Ver Datos CV Registrada
           </NavLink>
         </li>
         <li>
-          <NavLink to="/cv-modificada" activeClassName="active">
+          <NavLink to="/cv-modificada" activeClassName={styles.active}>
             Modificar los datos del CV
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/desactivar-cv" activeClassName="active">
-            Desactivar Hoja de Vida
           </NavLink>
         </li>
       </ul>
 
-      <div className="nav-right user-profile">
-        {auth.image != "default.png" && (
-          <img
-            src={auth.imagen_perfil}
-            className="container-avatar__img"
-            alt="Foto de perfil"
-          />
-        )}
-        {auth.imagen_perfil == "default.png" && (
-          <img
-            src={avatar}
-            className="container-avatar__img"
-            alt="Foto de perfil"
-          />
-        )}
-        {/* <img 
-            src={auth.imagen_perfil ? `/assets/img/${auth.imagen_perfil}` : '/assets/img/default.png'} 
-            alt="Foto de perfil" 
-            className="user-photo" 
-          /> */}
-        <span className="user-name">{`${auth.nombre} ${auth.apellido}`}</span>
-        <span className="user-initials">{auth.initials}</span>
+      <div className={styles.navRight}>
+      <span className={styles.userinitials}>{auth.initials}</span>
+        <img
+          src={profileImage}
+          className={styles.userphoto}
+          alt="Foto de perfil"
+        />
+        <span className={styles.username}>{`${auth.nombre} ${auth.apellido}`}</span>
+        
       </div>
     </nav>
   );

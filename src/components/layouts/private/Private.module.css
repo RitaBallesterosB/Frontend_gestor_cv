@@ -1,0 +1,75 @@
+/* Estilos generales del header privado */
+.headerpriv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Asegura que todos los elementos estén alineados verticalmente */
+    background-color: var(--grisClaro); /* Fondo gris claro */
+    padding: 1.5rem 0.5rem;
+}
+
+/* Contenedor del logo */
+.logocontainer {
+    flex-shrink: 0; /* Mantiene el tamaño del logo fijo */
+    display: flex;
+    align-items: center; /* Alinea el logo verticalmente */
+}
+
+/* Navegación principal (centrada) */
+.navpriv {
+    flex-grow: 1;
+    display: flex;
+    justify-content:flex-end; /* Menú centrado */
+    align-items: center; /* Alinea los enlaces del menú verticalmente */
+}
+
+.navmenu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: center; /* Asegura que los elementos de la lista estén centrados */
+}
+
+.navmenu li {
+    margin-right: 5rem; /* Espacio entre los elementos del menú */
+}
+
+.navmenu a {
+    text-decoration: none;
+    color: var(--grisRaton); /* Color gris ratón para los enlaces */
+    font-weight: 400; /* Peso medio de fuente */
+    font-size: 1.6rem;
+}
+
+.navmenu a:hover,
+.navmenu .active {
+    color: var(--azulCielo); /* Azul cielo en hover o activo */
+    font-weight: 600;
+  }
+
+/* Estilo para el perfil de usuario */
+.navRight {
+    display: flex;
+    align-items: center; /* Alinea la imagen y el nombre del usuario verticalmente */
+    gap: 1.5rem; /* Espacio entre la foto y el nombre */
+}
+
+.userphoto {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--grisRaton); /* Borde de la imagen */
+}
+
+.username {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--grisRaton);
+}
+
+.userinitials {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--azulCielo);
+}
