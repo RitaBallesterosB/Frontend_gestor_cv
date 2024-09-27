@@ -1,11 +1,13 @@
 import { HeaderPriv } from "../layouts/private/HeaderPriv";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // Importa useNavigate
 import styles from "./Cv.module.css";
 import { Global } from "../../helpers/Global";
 import Swal from "sweetalert2";
 
 export const CvRegistrada = () => {
   const [cvData, setCvData] = useState(null);
+  const navigate = useNavigate(); // Inicializa useNavigate
 
   useEffect(() => {
     const fetchCvData = async () => {
@@ -29,13 +31,18 @@ export const CvRegistrada = () => {
 
         const data = await response.json();
         setCvData(data);
+
+        // Verificar el estado del CV después de obtener los datos
+        if (data.cvData && !data.cvData.estado) { // Asegúrate de que "estado" sea la propiedad correcta
+          navigate('/reactivar-cv'); // Redirigir a la página de reactivación si el CV está desactivado
+        }
       } catch (error) {
         console.error("Error al obtener la hoja de vida registrada:", error);
       }
     };
 
     fetchCvData();
-  }, []);
+  }, [navigate]); // Asegúrate de incluir navigate en las dependencias
 
   const handleDesactivarCv = async () => {
     try {
@@ -56,15 +63,16 @@ export const CvRegistrada = () => {
         throw new Error("Error al desactivar la hoja de vida");
       }
 
-      // Aquí puedes manejar lo que suceda después de desactivar la hoja de vida
-      // Por ejemplo, redirigir a otra página o mostrar un mensaje
       Swal.fire({
         icon: 'success',
         title: 'Éxito',
         text: 'Hoja de vida desactivada con éxito',
         confirmButtonText: 'Aceptar'
+      }).then(() => {
+        // Redirigir a la página de reactivación después de que el usuario haga clic en "Aceptar"
+        navigate('/reactivar-cv');
       });
-      // Puedes redirigir al usuario o limpiar el estado
+
       setCvData(null);
     } catch (error) {
       console.error("Error al desactivar la hoja de vida:", error);
@@ -98,6 +106,7 @@ export const CvRegistrada = () => {
     area_ocupacion,
     tipo_area_ocupacion,
     aptitudes,
+    estado, // Asegúrate de que esta propiedad esté presente
   } = cvData.cvData;
 
   return (
@@ -190,7 +199,7 @@ export const CvRegistrada = () => {
                 "No especificado"
               )}
             </div>
-            <button type="submit" className={styles.btnSubmit}  onClick={handleDesactivarCv}>
+            <button type="submit" className={styles.btnSubmit} onClick={handleDesactivarCv}>
               Desactivar hoja de vida
             </button>
           </div>

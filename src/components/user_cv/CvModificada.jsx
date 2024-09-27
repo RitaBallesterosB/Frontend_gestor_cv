@@ -2,6 +2,7 @@ import { HeaderPriv } from "../layouts/private/HeaderPriv";
 import { useEffect, useState } from "react";
 import styles from "./Cv.module.css";
 import { Global } from "../../helpers/Global";
+import { useNavigate } from "react-router-dom"; // Importa useNavigate
 
 export const CvModificada = () => {
   const [cvData, setCvData] = useState(null);
@@ -11,6 +12,7 @@ export const CvModificada = () => {
   const [tiposOcupacion, setTiposOcupacion] = useState([]);
   const [aptitudes, setAptitudes] = useState([]);
   const [selectedAptitudes, setSelectedAptitudes] = useState([]);
+  const navigate = useNavigate(); // Inicializa useNavigate
 
   useEffect(() => {
     const fetchCvData = async () => {
@@ -37,13 +39,17 @@ export const CvModificada = () => {
         setFormData(data.cvData);
 
         setSelectedAptitudes(data.cvData.aptitudes.map((apt) => apt._id) || []); // Asegúrate de usar el campo correcto
+        // Verificar el estado del CV después de obtener los datos
+        if (data.cvData && !data.cvData.estado) { // Asegúrate de que "estado" sea la propiedad correcta
+          navigate('/reactivar-cv'); // Redirigir a la página de reactivación si el CV está desactivado
+        }
       } catch (error) {
         console.error("Error al obtener la hoja de vida registrada:", error);
       }
     };
 
     fetchCvData();
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const fetchAreasOcupacion = async () => {

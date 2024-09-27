@@ -8,6 +8,7 @@ import { Dashboard } from "../components/admin/Dashboard";
 import { AuthProvider } from "../context/AuthProvider";
 import { CvRegistrada } from "../components/user_cv/CvRegistrada";
 import { CvModificada } from "../components/user_cv/cvModificada";
+import { ReactivarCv } from "../components/user_cv/ReactivarCv";
 
 export const Routing = () => {
   return (
@@ -24,6 +25,7 @@ export const Routing = () => {
             <Route path="cv" element={<Cv />} />
             <Route path="cv-registrada" element={<CvRegistrada/>}/>
             <Route path="cv-modificada" element={<CvModificada/>}/>
+            <Route path="reactivar-cv" element={<ReactivarCv/>}/>
           </Route>
           {/* Rutas para cargar los componentes del administrador */}
           <Route>
