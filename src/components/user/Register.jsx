@@ -48,7 +48,7 @@ export const Register = () => {
     const data = await request.json();
 
     // Verificar si el estado de la respuesta del backend es "created" seteamos la variable saved con "saved" y si no, le asignamos "error", esto es para mostrar por pantalla el resultado del registro del usuario
-    if (request.status === 201 && data.status === "created") {
+    if (request.status === 201 && data.status === "success") {
       setSaved("saved");
 
       // Mostrar modal de éxito
@@ -58,10 +58,12 @@ export const Register = () => {
         confirmButtonText: "Continuar",
       }).then(() => {
         // Redirigir después de cerrar el modal
+        console.log("Redirigiendo a /login después de crear el usuario");
         navigate("/login");
       });
     } else {
       setSaved("error");
+     
 
       // Mostrar modal de error
       Swal.fire({

@@ -13,11 +13,14 @@ export const CvRegistrada = () => {
     const fetchCvData = async () => {
       try {
         const token = localStorage.getItem("token");
+        console.log("Token:", token); // Verificar token
         if (!token) {
           throw new Error("Token no disponible");
         }
 
-        const response = await fetch(Global.url + "user/ver-cv-registrado", {
+        const apiUrl = Global.url + "user/ver-cv-registrado";
+        console.log("URL de la API:", apiUrl); // Verificar URL
+        const response = await fetch(apiUrl, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -26,15 +29,20 @@ export const CvRegistrada = () => {
         });
 
         if (!response.ok) {
-          throw new Error("Error al obtener la hoja de vida registrada");
+          const errorText = await response.text();
+          throw new Error(`Error al obtener la hoja de vida registrada: ${errorText}`);
         }
 
         const data = await response.json();
         setCvData(data);
 
-        // Verificar el estado del CV después de obtener los datos
-        if (data.cvData && !data.cvData.estado) { // Asegúrate de que "estado" sea la propiedad correcta
-          navigate('/reactivar-cv'); // Redirigir a la página de reactivación si el CV está desactivado
+        if (data.cvData) {
+          if (!data.cvData.estado) {
+            navigate("/reactivar-cv"); // Redirigir a la página de reactivación
+          }
+        } else {
+          navigate("/cv-registrada");
+          console.log("No se encontró la hoja de vida registrada.");
         }
       } catch (error) {
         console.error("Error al obtener la hoja de vida registrada:", error);
@@ -42,7 +50,7 @@ export const CvRegistrada = () => {
     };
 
     fetchCvData();
-  }, [navigate]); // Asegúrate de incluir navigate en las dependencias
+  }, [navigate]);
 
   const handleDesactivarCv = async () => {
     try {
@@ -69,7 +77,6 @@ export const CvRegistrada = () => {
         text: 'Hoja de vida desactivada con éxito',
         confirmButtonText: 'Aceptar'
       }).then(() => {
-        // Redirigir a la página de reactivación después de que el usuario haga clic en "Aceptar"
         navigate('/reactivar-cv');
       });
 
@@ -106,7 +113,7 @@ export const CvRegistrada = () => {
     area_ocupacion,
     tipo_area_ocupacion,
     aptitudes,
-    estado, // Asegúrate de que esta propiedad esté presente
+    estado,
   } = cvData.cvData;
 
   return (

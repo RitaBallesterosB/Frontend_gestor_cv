@@ -7,7 +7,7 @@ import { HeaderPub } from "../components/layouts/public/HeaderPub";
 import { Dashboard } from "../components/admin/Dashboard";
 import { AuthProvider } from "../context/AuthProvider";
 import { CvRegistrada } from "../components/user_cv/CvRegistrada";
-import { CvModificada } from "../components/user_cv/cvModificada";
+import { CvModificada } from "../components/user_cv/CvModificada";
 import { ReactivarCv } from "../components/user_cv/ReactivarCv";
 
 export const Routing = () => {

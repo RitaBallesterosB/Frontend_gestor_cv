@@ -23,7 +23,7 @@ export const Login = () => {
   // Obtener la función navigate
   const navigate = useNavigate(); // Aquí llamas a useNavigate
 
-  // useEffect para mostrar alertas basadas en el estado de logged
+  // useEffect para mostrar alertas basadas en el estado de logged 
   useEffect(() => {
     if (logged === "logged") {
       Swal.fire({
@@ -76,14 +76,25 @@ export const Login = () => {
       resetForm();
 
       // Redirección según el rol del usuario
-      if (data.user.role === "ADMIN") {
-        navigate("/admin"); // Redirigir a admin si el rol es admin
-      } else {
-        // Redirigir a /cv para otros usuarios
+    if (data.user.role === "ADMIN") {
+      navigate("/admin"); // Redirigir a la página de administrador si el rol es admin
+    } else {
+      // Si es un usuario normal, verificamos si tiene hoja de vida registrada
+      if (data.user.hasCV) {
         setTimeout(() => {
-          navigate("/cv");
+          navigate("/cv-registrada"); // Redirigir a /cv-registrada si tiene hoja de vida
+        }, 1000);
+
+        console.log("Respuesta del servidor:", data);
+console.log("Valor de hasCV en frontend:", data.user.hasCV);
+
+  
+      } else {
+        setTimeout(() => {
+          navigate("/cv"); // Redirigir a la página de crear CV si no tiene hoja de vida
         }, 1000);
       }
+    }
     } else {
       // Seteamos la variable de estado logged si no se autenticó el usuario
       setLogged("error");
