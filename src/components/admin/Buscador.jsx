@@ -65,6 +65,32 @@ export const Buscador = () => {
     fetchAreasOcupacion();
   }, [token]);
 
+
+
+// Manejar cambio en el selector de aptitudes
+const handleChange = (e) => {
+  const { value } = e.target;
+
+  changed({ target: { name: "aptitudes", value } });
+
+  if (value) {
+    const selectedAptitudes = aptitudes.find(
+      (apt) => apt._id === value
+    );
+    if (selectedAptitudes) {
+      setAptitudes(selectedAptitudes.tipo.apt._id); // Esto podría ser problemático
+    } else {
+      setAptitudes([]);
+    }
+  } else {
+    setTiposOcupacion([]);
+    setAptitudes([]);
+  }
+};
+
+
+
+
   // Manejar cambio en el selector de área de ocupación
   const handleAreaChange = (e) => {
     const { value } = e.target;
@@ -218,6 +244,32 @@ export const Buscador = () => {
                 </select>
               </div>
             )}
+
+
+             {/* aptitudes */}
+             {aptitudes.length > 0 && (
+              <div className={styles.input}>
+                <label>Aptitudes</label>
+                <select
+                  name="aptitudes"
+                  value={form.aptitudes || ""}
+                  onChange={handleChange}
+                >
+                  <option value="">Seleccione un tipo</option>
+                  {aptitudes.map((apt) => (
+                    <option
+                      key={apt._id}
+                      value={apt._id}
+                    >
+                      {apt.nombre}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            
+            
 
             <input type="text" placeholder="Ej: Administrador" />
             <button type="submit" className={styles.btnSubmit}>
