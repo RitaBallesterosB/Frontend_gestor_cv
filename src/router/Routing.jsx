@@ -3,7 +3,7 @@ import { Login } from "../components/user/Login";
 import { Register } from "../components/user/Register";
 import { Cv } from "../components/user_cv/Cv";
 import { PublicLayout } from "../components/layouts/public/PublicLayout";
-import { HeaderPub } from "../components/layouts/public/HeaderPub";
+import { Navigate } from "react-router-dom";
 import { Dashboard } from "../components/admin/Dashboard";
 import { AuthProvider } from "../context/AuthProvider";
 import { CvRegistrada } from "../components/user_cv/CvRegistrada";
@@ -15,6 +15,8 @@ export const Routing = () => {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
+          {/* Redirección cuando la ruta es exactamente la raíz */}
+          <Route path="/" element={<Navigate to="/login" />} />
           {/* Rutas para cargar los componentes de la ruta pública */}
           <Route>
             <Route path="login" element={<Login />} />
@@ -23,9 +25,9 @@ export const Routing = () => {
           {/* Rutas para cargar los componentes de la ruta privada */}
           <Route>
             <Route path="cv" element={<Cv />} />
-            <Route path="cv-registrada" element={<CvRegistrada/>}/>
-            <Route path="cv-modificada" element={<CvModificada/>}/>
-            <Route path="reactivar-cv" element={<ReactivarCv/>}/>
+            <Route path="cv-registrada" element={<CvRegistrada />} />
+            <Route path="cv-modificada" element={<CvModificada />} />
+            <Route path="reactivar-cv" element={<ReactivarCv />} />
           </Route>
           {/* Rutas para cargar los componentes del administrador */}
           <Route>
