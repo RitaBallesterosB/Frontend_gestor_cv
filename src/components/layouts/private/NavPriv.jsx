@@ -35,7 +35,11 @@ const NavPriv = () => {
           alt="Foto de perfil"
         />
         <span className={styles.username}>{`${auth.nombre} ${auth.apellido}`}</span>
-        
+        <div>
+        <NavLink to="/logout" className={styles.boton}>
+            <span>Cerrar sesión</span>
+          </NavLink>
+        </div>
       </div>
     </nav>
   );

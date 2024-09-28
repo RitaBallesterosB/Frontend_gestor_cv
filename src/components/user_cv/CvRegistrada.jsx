@@ -4,10 +4,18 @@ import { useNavigate } from "react-router-dom"; // Importa useNavigate
 import styles from "./Cv.module.css";
 import { Global } from "../../helpers/Global";
 import Swal from "sweetalert2";
+import useAuth from "../../hooks/useAuth";
+import avatar from "../../assets/img/default.png";
 
 export const CvRegistrada = () => {
   const [cvData, setCvData] = useState(null);
   const navigate = useNavigate(); // Inicializa useNavigate
+  const { auth } = useAuth();
+
+  const profileImage =
+  auth.imagen_perfil && auth.imagen_perfil !== "default.png"
+    ? auth.imagen_perfil
+    : avatar;
 
   useEffect(() => {
     const fetchCvData = async () => {
@@ -123,6 +131,11 @@ export const CvRegistrada = () => {
         <h1>Hoja de vida registrada</h1>
         <div className={styles.subContenedorCv}>
           <h3>Información registrada</h3>
+          <img
+            src={profileImage}
+            className={styles.userphoto}
+            alt="Foto de perfil"
+          />
           <div className={styles.formCv}>
             <div className={styles.contenedorInput}>
               <div className={styles.input}>

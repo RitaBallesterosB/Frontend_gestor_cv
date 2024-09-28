@@ -59,7 +59,7 @@ export const Register = () => {
       }).then(() => {
         // Redirigir después de cerrar el modal
         console.log("Redirigiendo a /login después de crear el usuario");
-        navigate("/login");
+        navigate("cv-registrada");
       });
     } else {
       setSaved("error");

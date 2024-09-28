@@ -46,10 +46,12 @@ export const ReactivarCv = () => {
   return (
     <div>
       <HeaderPriv />
-      <h1>Si desesa ver o modificar su hoja de vida registrada debe reactivarla nuevamente </h1>
+      <div className={styles.page}>
+      <h1>Si desea ver o modificar su hoja de vida registrada debe reactivarla nuevamente </h1>
       <button onClick={handleReactivarCv} type="submit" className={styles.btnSubmit}>
         Reactivar hoja de vida
       </button>
+      </div>
     </div>
   );
 };

@@ -5,10 +5,15 @@ import styles from "./Cv.module.css";
 import { Global } from "../../helpers/Global";
 import useAuth from "../../hooks/useAuth";
 import avatar from "../../assets/img/default.png";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 export const Cv = () => {
   // Se recibe la información desde el Contexto a través del hook useAuth
   const { auth } = useAuth();
+
+  const navigate = useNavigate();
+
 
   const profileImage =
     auth.imagen_perfil && auth.imagen_perfil !== "default.png"
@@ -151,24 +156,24 @@ export const Cv = () => {
 
   const registerCv = async (e) => {
     e.preventDefault();
-
+  
     const { areaOcupacion, tipoOcupacion, ...rest } = form;
-
+  
     const dataToSend = {
       ...rest,
       area_ocupacion: areaOcupacion, // Cambiar el nombre a area_ocupacion
       tipo_area_ocupacion: tipoOcupacion, // Cambiar el nombre a tipo_area_ocupacion
       aptitudes: form.aptitudes.filter((apt) => apt), // Filtrar valores vacíos
     };
-
+  
     try {
       if (!token) {
         console.error("No se encontró el token de autenticación");
         return;
       }
-
+  
       console.log("Data to send:", dataToSend);
-
+  
       const request = await fetch(Global.url + "user/hoja-de-vida", {
         method: "POST",
         headers: {
@@ -177,13 +182,42 @@ export const Cv = () => {
         },
         body: JSON.stringify(dataToSend),
       });
-
+  
       const data = await request.json();
-      console.log("Response del servidor:", data);
+
+  
+      if (request.status === 201) {
+        setSaved("saved")
+        // Mostrar modal de éxito
+        Swal.fire({
+          title: "Hoja de vida creada correctamente",
+          icon: "success",
+          confirmButtonText: "Continuar",
+        }).then(() => {
+          // Redirigir después de cerrar el modal
+          navigate("/cv-registrada");
+        });
+      } else {
+        setSaved("error")
+        // Mostrar modal de error
+        Swal.fire({
+          title:"¡Error al registrar la hoja de vida!",
+          icon: "error",
+          confirmButtonText: "Intentar nuevamente",
+        });
+      }
     } catch (error) {
       console.error("Error al registrar la hoja de vida:", error);
+      // Mostrar modal de error en caso de excepciones
+      Swal.fire({
+        title: "Error en la conexión",
+        text: "No se pudo conectar al servidor. Intente nuevamente.",
+        icon: "error",
+        confirmButtonText: "Aceptar",
+      });
     }
   };
+  
 
   return (
     <>

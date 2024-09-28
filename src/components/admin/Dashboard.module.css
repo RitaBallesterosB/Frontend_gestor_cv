@@ -7,14 +7,22 @@ header {
 
 /* Estilos del sidebar */
 
-.contenedorSidebar {
+.contenedorPrincipal {
     background-color: var(--grisClaro);
     float: left;
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    align-items: center;
+    height: 80vh;
 }
+
+.contenedorSidebar {
+    display: flex; /* Asegúrate de que esté configurado como flex */
+    flex-direction: column; /* O cambia a 'row' si prefieres que los elementos se alineen horizontalmente */
+    align-items: center; /* Centra horizontalmente */
+    justify-content: center; /* Centra verticalmente */
+    height: calc(80vh - 10vh); /* Ajusta la altura según sea necesario */
+}
+
 
 .btnAdmin {
     font-family: "Open Sans";
@@ -28,4 +36,88 @@ header {
     display: flex;
     justify-content: center;
     margin-top: 1rem;
+}
+
+/* Navegación principal (centrada) */
+.navpriv {
+    flex-grow: 1;
+    display: flex;
+    justify-content:flex-end; /* Menú centrado */
+    align-items: center; /* Alinea los enlaces del menú verticalmente */
+}
+
+/* Estilo para el perfil de usuario */
+.navRight {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Alinea la imagen y el nombre del usuario verticalmente */
+    gap: 1.5rem; /* Espacio entre la foto y el nombre */
+}
+
+.userphoto {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--grisRaton); /* Borde de la imagen */
+}
+
+.username {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--grisRaton);
+}
+
+.userinitials {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--azulCielo);
+}
+
+.boton {
+    text-decoration: none;
+    color: #FFFFFF;
+    font-family: "Open Sans";
+    font-weight:bold;
+    padding: 10px;
+    background-color: var(--azulCielo);
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    width: 120px;
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.headerAdmin {
+    display: flex;
+    justify-content:space-between;
+    align-items: center; /* Asegura que todos los elementos estén alineados verticalmente */
+    background-color: var(--grisClaro); /* Fondo gris claro */
+    width: 100vw;
+}
+
+.buscador {
+    background-color: var(--grisMedio);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    background-color: blue;
+}
+
+.formBuscador {
+    display: flex;
+    flex-direction: row; /* Cambia la dirección para que los elementos se dispongan en fila */
+    gap: 1rem; /* Añade espacio entre los elementos */
+    justify-content: space-between; /* Distribuye el espacio entre los elementos */
+    align-items: center; /* Alinea los elementos verticalmente al centro */
+    flex-wrap: wrap; /* Permite que los elementos se ajusten a la siguiente fila si la pantalla es pequeña */
+    width: 100%; /* Asegúrate de que el formulario ocupe todo el ancho disponible */
 }

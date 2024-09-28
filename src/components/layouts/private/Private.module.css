@@ -5,6 +5,7 @@
     align-items: center; /* Asegura que todos los elementos estén alineados verticalmente */
     background-color: var(--grisClaro); /* Fondo gris claro */
     padding: 1.5rem 0.5rem;
+    width: 100vw;
 }
 
 /* Contenedor del logo */
@@ -72,4 +73,20 @@
     font-size: 2rem;
     font-weight: 700;
     color: var(--azulCielo);
+}
+
+.boton {
+    text-decoration: none;
+    color: #FFFFFF;
+    font-family: "Open Sans";
+    font-weight:bold;
+    padding: 10px;
+    background-color: var(--azulCielo);
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    width: 120px;
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
 }
