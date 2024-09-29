@@ -67,7 +67,7 @@ export const Buscador = () => {
 
 
 
-// Manejar cambio en el selector de aptitudes
+// Manejar cambio en el selector de aptitudes - AGREGÓ RITA
 const handleChange = (e) => {
   const { value } = e.target;
 
@@ -246,7 +246,7 @@ const handleChange = (e) => {
             )}
 
 
-             {/* aptitudes */}
+             {/* aptitudes - RITA */}
              {aptitudes.length > 0 && (
               <div className={styles.input}>
                 <label>Aptitudes</label>
