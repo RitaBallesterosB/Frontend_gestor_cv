@@ -65,31 +65,24 @@ export const Buscador = () => {
     fetchAreasOcupacion();
   }, [token]);
 
+  // Manejar cambio en el selector de aptitudes - AGREGÓ RITA
+  const handleChange = (e) => {
+    const { value } = e.target;
 
+    changed({ target: { name: "aptitudes", value } });
 
-// Manejar cambio en el selector de aptitudes - AGREGÓ RITA
-const handleChange = (e) => {
-  const { value } = e.target;
-
-  changed({ target: { name: "aptitudes", value } });
-
-  if (value) {
-    const selectedAptitudes = aptitudes.find(
-      (apt) => apt._id === value
-    );
-    if (selectedAptitudes) {
-      setAptitudes(selectedAptitudes.tipo.apt._id); // Esto podría ser problemático
+    if (value) {
+      const selectedAptitudes = aptitudes.find((apt) => apt._id === value);
+      if (selectedAptitudes) {
+        setAptitudes(selectedAptitudes.tipo.apt._id); // Esto podría ser problemático
+      } else {
+        setAptitudes([]);
+      }
     } else {
+      setTiposOcupacion([]);
       setAptitudes([]);
     }
-  } else {
-    setTiposOcupacion([]);
-    setAptitudes([]);
-  }
-};
-
-
-
+  };
 
   // Manejar cambio en el selector de área de ocupación
   const handleAreaChange = (e) => {
@@ -176,105 +169,103 @@ const handleChange = (e) => {
     <>
       <div className={styles.buscador}>
         <h1>DashBoard Management CV</h1>
-        <div className={styles.subContenedorCv}>
+        <div className={styles.subContenedorBuscador}>
           <p>
             Bienvenido a su Administrador de Hojas de Vida. Desde aquí podrá
             encontrar candidatos para un cargo específico, utilizando diversos
             criterios de búsqueda por palabras o características puntuales
           </p>
           <form className={styles.formBuscador}>
-            <div>
-            <div className={styles.input}>
-              <label htmlFor="region_residencia">
-                Municipio de residencia{" "}
-              </label>
-              <select
-                id="region_residencia"
-                name="region_residencia"
-                value={form.region_residencia || ""}
-                onChange={changed}
-                required
-              >
-                <option value="">Seleccione un Municipio</option>{" "}
-                {/* Opción por defecto */}
-                {municipios.map((municipio, index) => (
-                  <option key={index} value={municipio}>
-                    {municipio}
-                  </option>
-                ))}
-              </select>
-            </div>
-            {/* Área de Ocupación */}
-            <div className={styles.input}>
-              <label>Área de ocupación</label>
-              <select
-                name="areaOcupacion"
-                value={form.areaOcupacion || ""}
-                onChange={handleAreaChange}
-              >
-                <option value="">Seleccione un área</option>
-                {areasOcupacion.map((area) => (
-                  <option
-                    key={area.areaOcupacionId}
-                    value={area.areaOcupacionId}
-                  >
-                    {area.nombre}
-                  </option>
-                ))}
-              </select>
-            </div>
-            {/* Tipos de Ocupación */}
-            {tiposOcupacion.length > 0 && (
+            <div className={styles.contenedorBuscador}>
               <div className={styles.input}>
-                <label>Tipo de ocupación</label>
+                <label htmlFor="region_residencia">
+                  Municipio de residencia
+                </label>
                 <select
-                  name="tipoOcupacion"
-                  value={form.tipoOcupacion || ""}
-                  onChange={handleTipoChange}
+                  id="region_residencia"
+                  name="region_residencia"
+                  value={form.region_residencia || ""}
+                  onChange={changed}
                 >
-                  <option value="">Seleccione un tipo</option>
-                  {tiposOcupacion.map((tipo) => (
-                    <option
-                      key={tipo.tipoAreaOcupacionId}
-                      value={tipo.tipoAreaOcupacionId}
-                    >
-                      {tipo.nombre}
+                  <option value="">Seleccione un Municipio</option>{" "}
+                  {/* Opción por defecto */}
+                  {municipios.map((municipio, index) => (
+                    <option key={index} value={municipio}>
+                      {municipio}
                     </option>
                   ))}
                 </select>
               </div>
-            )}
-
-
-             {/* aptitudes - RITA */}
-             {aptitudes.length > 0 && (
               <div className={styles.input}>
-                <label>Aptitudes</label>
+                {/* Área de Ocupación */}
+                <label>Área de ocupación</label>
                 <select
-                  name="aptitudes"
-                  value={form.aptitudes || ""}
-                  onChange={handleChange}
+                  name="areaOcupacion"
+                  value={form.areaOcupacion || ""}
+                  onChange={handleAreaChange}
                 >
-                  <option value="">Seleccione un tipo</option>
-                  {aptitudes.map((apt) => (
+                  <option value="">Seleccione un área</option>
+                  {areasOcupacion.map((area) => (
                     <option
-                      key={apt._id}
-                      value={apt._id}
+                      key={area.areaOcupacionId}
+                      value={area.areaOcupacionId}
                     >
-                      {apt.nombre}
+                      {area.nombre}
                     </option>
                   ))}
                 </select>
               </div>
-            )}
-
-            
-            
-
-            <input type="text" placeholder="Ej: Administrador" />
-            <button type="submit" className={styles.btnSubmit}>
-              Buscar{" "}
-            </button>
+              <div className={styles.input}>
+                {/* Tipos de Ocupación */}
+                {tiposOcupacion.length > 0 && (
+                  <>
+                    <label>Tipo de ocupación</label>
+                    <select
+                      name="tipoOcupacion"
+                      value={form.tipoOcupacion || ""}
+                      onChange={handleTipoChange}
+                    >
+                      <option value="">Seleccione un tipo</option>
+                      {tiposOcupacion.map((tipo) => (
+                        <option
+                          key={tipo.tipoAreaOcupacionId}
+                          value={tipo.tipoAreaOcupacionId}
+                        >
+                          {tipo.nombre}
+                        </option>
+                      ))}
+                    </select>
+                  </>
+                )}
+              </div>
+              <div className={styles.input}>
+                {/* Aptitudes */}
+                {aptitudes.length > 0 && (
+                  <>
+                    <label>Aptitudes</label>
+                    <select
+                      name="aptitudes"
+                      value={form.aptitudes || ""}
+                      onChange={handleChange}
+                    >
+                      <option value="">Seleccione un tipo</option>
+                      {aptitudes.map((apt) => (
+                        <option key={apt._id} value={apt._id}>
+                          {apt.nombre}
+                        </option>
+                      ))}
+                    </select>
+                  </>
+                )}
+              </div>
+            </div>
+            <div className={styles.contenedorBuscador}>
+              <div className={styles.input}>
+                <input type="text" placeholder="Ej: Administrador" />
+              </div>
+              <button type="submit" className={styles.botonBuscar}>
+                Buscar
+              </button>
             </div>
           </form>
         </div>
