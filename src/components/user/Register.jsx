@@ -59,7 +59,7 @@ export const Register = () => {
           icon: "success",
           confirmButtonText: "Continuar",
         }).then(() => {
-          navigate("/cv-registrada");
+          navigate("/cv");
         });
       } else {
         setSaved("error");
