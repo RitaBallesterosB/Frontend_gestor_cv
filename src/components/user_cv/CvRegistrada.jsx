@@ -1,6 +1,6 @@
 import { HeaderPriv } from "../layouts/private/HeaderPriv";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Importa useNavigate
+import { useNavigate } from "react-router-dom"; 
 import styles from "./Cv.module.css";
 import { Global } from "../../helpers/Global";
 import Swal from "sweetalert2";

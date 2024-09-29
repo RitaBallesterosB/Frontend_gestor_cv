@@ -1,37 +1,20 @@
 import styles from "./Dashboard.module.css";
-import { HeaderPriv } from "../layouts/private/HeaderPriv";
 import { useForm } from "../../hooks/useForm";
 import { useEffect, useState } from "react";
 import { Global } from "../../helpers/Global";
-import useAuth from "../../hooks/useAuth";
-import avatar from "../../assets/img/default.png";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
 export const Buscador = () => {
-  // Se recibe la información desde el Contexto a través del hook useAuth
-  const { auth } = useAuth();
-
   const navigate = useNavigate();
 
-  // Estado para mostrar resultado del registro del user
   const [saved, setSaved] = useState("not_saved");
-
-  // Variable para almacenar el token para las peticiones a realizar en este componente
   const token = localStorage.getItem("token");
 
-  // Usamos el hook personalizado useForm
+  // Hook personalizado para el formulario
   const { form, changed, resetForm } = useForm({
-    nombre_usuario: auth.nombre || "",
-    apellido_usuario: auth.apellido || "",
-    correo_electronico: auth.correo_electronico || "",
-    celular: "",
-    tipo_documento: "",
-    numero_dto: "",
-    bio: "",
-    ocupacion: "",
+    palabra_clave: "",
     region_residencia: "",
-    tiempo_experiencia: "",
     areaOcupacion: "",
     tipoOcupacion: "",
     aptitudes: [],
@@ -40,6 +23,7 @@ export const Buscador = () => {
   const [areasOcupacion, setAreasOcupacion] = useState([]);
   const [tiposOcupacion, setTiposOcupacion] = useState([]);
   const [aptitudes, setAptitudes] = useState([]);
+  const [municipios, setMunicipios] = useState([]);
 
   // Fetch áreas de ocupación desde el backend
   useEffect(() => {
@@ -65,32 +49,27 @@ export const Buscador = () => {
     fetchAreasOcupacion();
   }, [token]);
 
-  // Manejar cambio en el selector de aptitudes - AGREGÓ RITA
-  const handleChange = (e) => {
-    const { value } = e.target;
+  // const handleChange = (e) => {
+  //   const { value } = e.target;
+  //   changed({ target: { name: "aptitudes", value } });
 
-    changed({ target: { name: "aptitudes", value } });
+  //   if (value) {
+  //     const selectedAptitudes = aptitudes.find((apt) => apt._id === value);
+  //     if (selectedAptitudes) {
+  //       setAptitudes(selectedAptitudes.tipo.apt._id);
+  //     } else {
+  //       setAptitudes([]);
+  //     }
+  //   } else {
+  //     setTiposOcupacion([]);
+  //     setAptitudes([]);
+  //   }
+  // };
 
-    if (value) {
-      const selectedAptitudes = aptitudes.find((apt) => apt._id === value);
-      if (selectedAptitudes) {
-        setAptitudes(selectedAptitudes.tipo.apt._id); // Esto podría ser problemático
-      } else {
-        setAptitudes([]);
-      }
-    } else {
-      setTiposOcupacion([]);
-      setAptitudes([]);
-    }
-  };
-
-  // Manejar cambio en el selector de área de ocupación
   const handleAreaChange = (e) => {
     const { value } = e.target;
-
     changed({ target: { name: "areaOcupacion", value } });
 
-    // Aquí puedes gestionar los tipos de ocupación y aptitudes según la lógica que necesites
     if (value) {
       const selectedArea = areasOcupacion.find(
         (area) => area.areaOcupacionId === value
@@ -100,17 +79,15 @@ export const Buscador = () => {
       } else {
         setTiposOcupacion([]);
       }
-      setAptitudes([]); // Reinicia las aptitudes
+      setAptitudes([]);
     } else {
       setTiposOcupacion([]);
       setAptitudes([]);
     }
   };
 
-  // Manejar cambio en el selector de tipo de ocupación
   const handleTipoChange = (e) => {
     const { value } = e.target;
-
     changed({ target: { name: "tipoOcupacion", value } });
 
     const selectedTipo = tiposOcupacion.find(
@@ -119,128 +96,130 @@ export const Buscador = () => {
     setAptitudes(selectedTipo ? selectedTipo.aptitudes : []);
   };
 
-  // Efecto para precargar los datos del usuario
+  // Obtener municipios desde la API externa
   useEffect(() => {
-    if (
-      auth &&
-      (form.nombre_usuario !== auth.nombre ||
-        form.apellido_usuario !== auth.apellido ||
-        form.correo_electronico !== auth.correo_electronico)
-    ) {
-      resetForm({
-        nombre_usuario: auth.nombre || "",
-        apellido_usuario: auth.apellido || "",
-        correo_electronico: auth.correo_electronico || "",
-        celular: "",
-        tipo_documento: "",
-        numero_dto: "",
-        bio: "",
-        ocupacion: "",
-        region_residencia: "",
-        tiempo_experiencia: "",
-        areaOcupacion: "",
-        tipoOcupacion: "",
-        aptitudes: [],
-      });
-    }
-  }, [auth, resetForm]);
+    const obtenerMunicipios = async () => {
+      try {
+        const response = await fetch(
+          "https://www.datos.gov.co/resource/xdk5-pm3f.json"
+        );
+        const data = await response.json();
+        const municipiosUnicos = [
+          ...new Set(data.map((item) => item.municipio)),
+        ];
+        setMunicipios(municipiosUnicos);
+      } catch (error) {
+        console.error("Error al obtener los municipios:", error);
+      }
+    };
 
-  const [municipios, setMunicipios] = useState([]);
-
-  // Función para obtener las regiones desde la API
-  const obtenerMunicipios = async () => {
-    try {
-      const response = await fetch(
-        "https://www.datos.gov.co/resource/xdk5-pm3f.json"
-      );
-      const data = await response.json();
-      const municipiosUnicos = [...new Set(data.map((item) => item.municipio))];
-      setMunicipios(municipiosUnicos);
-    } catch (error) {
-      console.error("Error al obtener los municipios:", error);
-    }
-  };
-
-  useEffect(() => {
     obtenerMunicipios();
   }, []);
 
+  // Enviar la búsqueda al backend
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(Global.url + "admin/buscar-cv", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({
+          palabra_clave: form.palabra_clave,
+          region_residencia: form.region_residencia,
+          area_ocupacion: form.areaOcupacion,
+          tipo_area_ocupacion: form.tipoOcupacion,
+          aptitudes: form.aptitudes,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error en la búsqueda");
+      }
+
+      const result = await response.json();
+      console.log("Resultados de búsqueda:", result);
+      setSaved("saved");
+      Swal.fire("Búsqueda exitosa", "Resultados encontrados", "success");
+    } catch (error) {
+      console.error("Error en la búsqueda:", error);
+      setSaved("error");
+      Swal.fire("Error", "Hubo un problema con la búsqueda", "error");
+    }
+  };
+
   return (
-    <>
-      <div className={styles.buscador}>
-        <h1>DashBoard Management CV</h1>
-        <div className={styles.subContenedorBuscador}>
-          <p>
-            Bienvenido a su Administrador de Hojas de Vida. Desde aquí podrá
-            encontrar candidatos para un cargo específico, utilizando diversos
-            criterios de búsqueda por palabras o características puntuales
-          </p>
-          <form className={styles.formBuscador}>
-            <div className={styles.contenedorBuscador}>
-              <div className={styles.input}>
-                <label htmlFor="region_residencia">
-                  Municipio de residencia
-                </label>
-                <select
-                  id="region_residencia"
-                  name="region_residencia"
-                  value={form.region_residencia || ""}
-                  onChange={changed}
-                >
-                  <option value="">Seleccione un Municipio</option>{" "}
-                  {/* Opción por defecto */}
-                  {municipios.map((municipio, index) => (
-                    <option key={index} value={municipio}>
-                      {municipio}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className={styles.input}>
-                {/* Área de Ocupación */}
-                <label>Área de ocupación</label>
-                <select
-                  name="areaOcupacion"
-                  value={form.areaOcupacion || ""}
-                  onChange={handleAreaChange}
-                >
-                  <option value="">Seleccione un área</option>
-                  {areasOcupacion.map((area) => (
-                    <option
-                      key={area.areaOcupacionId}
-                      value={area.areaOcupacionId}
-                    >
-                      {area.nombre}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className={styles.input}>
-                {/* Tipos de Ocupación */}
-                {tiposOcupacion.length > 0 && (
-                  <>
-                    <label>Tipo de ocupación</label>
-                    <select
-                      name="tipoOcupacion"
-                      value={form.tipoOcupacion || ""}
-                      onChange={handleTipoChange}
-                    >
-                      <option value="">Seleccione un tipo</option>
-                      {tiposOcupacion.map((tipo) => (
-                        <option
-                          key={tipo.tipoAreaOcupacionId}
-                          value={tipo.tipoAreaOcupacionId}
-                        >
-                          {tipo.nombre}
-                        </option>
-                      ))}
-                    </select>
-                  </>
-                )}
-              </div>
-              <div className={styles.input}>
-                {/* Aptitudes */}
-                {aptitudes.length > 0 && (
+    <div className={styles.buscador}>
+      <h1>DashBoard Management CV</h1>
+      <div className={styles.subContenedorBuscador}>
+        <p>
+          Bienvenido a su Administrador de Hojas de Vida. Desde aquí podrá
+          encontrar candidatos para un cargo específico, utilizando diversos
+          criterios de búsqueda.
+        </p>
+        <form className={styles.formBuscador} onSubmit={handleSubmit}>
+          <div className={styles.contenedorBuscador}>
+            <div className={styles.input}>
+              <label htmlFor="region_residencia">Municipio de residencia</label>
+              <select
+                id="region_residencia"
+                name="region_residencia"
+                value={form.region_residencia || ""}
+                onChange={changed}
+              >
+                <option value="">Seleccione un Municipio</option>
+                {municipios.map((municipio, index) => (
+                  <option key={index} value={municipio}>
+                    {municipio}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className={styles.input}>
+              <label>Área de ocupación</label>
+              <select
+                name="areaOcupacion"
+                value={form.areaOcupacion || ""}
+                onChange={handleAreaChange}
+              >
+                <option value="">Seleccione un área</option>
+                {areasOcupacion.map((area) => (
+                  <option
+                    key={area.areaOcupacionId}
+                    value={area.areaOcupacionId}
+                  >
+                    {area.nombre}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className={styles.input}>
+              {tiposOcupacion.length > 0 && (
+                <>
+                  <label>Tipo de ocupación</label>
+                  <select
+                    name="tipoOcupacion"
+                    value={form.tipoOcupacion || ""}
+                    onChange={handleTipoChange}
+                  >
+                    <option value="">Seleccione un tipo</option>
+                    {tiposOcupacion.map((tipo) => (
+                      <option
+                        key={tipo.tipoAreaOcupacionId}
+                        value={tipo.tipoAreaOcupacionId}
+                      >
+                        {tipo.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </>
+              )}
+            </div>
+            {/* <div className={styles.input}>
+              
+              {aptitudes.length > 0 && (
                   <>
                     <label>Aptitudes</label>
                     <select
@@ -257,19 +236,24 @@ export const Buscador = () => {
                     </select>
                   </>
                 )}
-              </div>
+            </div> */}
+          </div>
+          <div className={styles.contenedorBuscador}>
+            <div className={styles.input}>
+              <input
+                type="text"
+                placeholder="Ej: Administrador"
+                name="palabra_clave"
+                value={form.palabra_clave || ""}
+                onChange={changed}
+              />
             </div>
-            <div className={styles.contenedorBuscador}>
-              <div className={styles.input}>
-                <input type="text" placeholder="Ej: Administrador" />
-              </div>
-              <button type="submit" className={styles.botonBuscar}>
-                Buscar
-              </button>
-            </div>
-          </form>
-        </div>
+            <button type="submit" className={styles.botonBuscar}>
+              Buscar
+            </button>
+          </div>
+        </form>
       </div>
-    </>
+    </div>
   );
 };

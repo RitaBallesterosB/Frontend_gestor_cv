@@ -1,231 +1,223 @@
 body {
-    overflow-x: hidden; /* Esto evitará el scroll horizontal */
+  overflow-x: hidden; /* Esto evitará el scroll horizontal */
 }
 
 /* Estilos del dashboard */
 
 header {
-    text-align: center;
-    height: 15vh;
+  text-align: center;
+  height: 15vh;
 }
 
 /* Estilos del sidebar */
 
 .contenedorPrincipal {
-    background-color: var(--grisClaro);
-    float: left;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
+  background-color: var(--grisClaro);
+  float: left;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
 .contenedorSidebar {
-    display: flex; /* Asegúrate de que esté configurado como flex */
-    flex-direction: column; /* O cambia a 'row' si prefieres que los elementos se alineen horizontalmente */
-    align-items: center; /* Centra horizontalmente */
-    justify-content: center; /* Centra verticalmente */
-    height: calc(80vh - 10vh); /* Ajusta la altura según sea necesario */
+  display: flex; /* Asegúrate de que esté configurado como flex */
+  flex-direction: column; /* O cambia a 'row' si prefieres que los elementos se alineen horizontalmente */
+  align-items: center; /* Centra horizontalmente */
+  justify-content: center; /* Centra verticalmente */
+  height: calc(80vh - 10vh); /* Ajusta la altura según sea necesario */
 }
 
-
 .btnAdmin {
-    font-family: "Open Sans";
-    font-weight:bold;
-    padding: 10px;
-    background-color: var(--grisMedio);
-    border-radius: 0.5rem;
-    border: none;
-    cursor: pointer;
-    width: 80%;
-    display: flex;
-    justify-content: center;
-    margin-top: 1rem;
+  font-family: "Open Sans";
+  font-weight: bold;
+  padding: 10px;
+  background-color: var(--grisMedio);
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
 }
 
 /* Navegación principal (centrada) */
 .navpriv {
-    flex-grow: 1;
-    display: flex;
-    justify-content:flex-end; /* Menú centrado */
-    align-items: center; /* Alinea los enlaces del menú verticalmente */
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-end; /* Menú centrado */
+  align-items: center; /* Alinea los enlaces del menú verticalmente */
 }
 
 /* Estilo para el perfil de usuario */
 .navRight {
-    display: flex;
-    flex-direction: row;
-    align-items: center; /* Alinea la imagen y el nombre del usuario verticalmente */
-    gap: 1.5rem; /* Espacio entre la foto y el nombre */
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* Alinea la imagen y el nombre del usuario verticalmente */
+  gap: 1.5rem; /* Espacio entre la foto y el nombre */
 }
 
 .userphoto {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--grisRaton); /* Borde de la imagen */
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--grisRaton); /* Borde de la imagen */
 }
 
 .username {
-    font-size: 1.6rem;
-    font-weight: 600;
-    color: var(--grisRaton);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--grisRaton);
 }
 
 .userinitials {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--azulCielo);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--azulCielo);
 }
 
 .boton {
-    text-decoration: none;
-    color: #FFFFFF;
-    font-family: "Open Sans";
-    font-weight:bold;
-    padding: 10px;
-    background-color: var(--azulCielo);
-    border-radius: 0.5rem;
-    border: none;
-    cursor: pointer;
-    width: 120px;
-    display: flex;
-    justify-content: center;
-    margin-top: 1rem;
+  text-decoration: none;
+  color: #ffffff;
+  font-family: "Open Sans";
+  font-weight: bold;
+  padding: 10px;
+  background-color: var(--azulCielo);
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  width: 120px;
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
 }
 
 .headerAdmin {
-    display: flex;
-    justify-content:space-between;
-    align-items: center; /* Asegura que todos los elementos estén alineados verticalmente */
-    background-color: var(--grisClaro); /* Fondo gris claro */
-    width: 100vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Asegura que todos los elementos estén alineados verticalmente */
+  background-color: var(--grisClaro); /* Fondo gris claro */
+  width: 100vw;
 }
 
 .buscador {
-    background-color: var(--grisMedio);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  background-color: var(--grisMedio);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Estilos del formulario buscador */
 
-.subContenedorBuscador p{
-    font-size: large ;
-    color: var(--blanco);
-    width: 70vw;
+.subContenedorBuscador p {
+  font-size: large;
+  color: var(--blanco);
+  width: 70vw;
 }
 
 .formBuscador {
-    display: flex;
-    flex-direction: column; /* Mantiene los elementos en fila horizontal */
-    gap: 1rem; /* Espacio entre los divs */
-    justify-content: space-between; /* Distribuye el espacio entre los elementos */
-    align-items: center; /* Alinea los elementos en la parte superior */
-    flex-wrap: wrap; /* Permite que los elementos se ajusten a la siguiente fila si la pantalla es pequeña */
-    width: 100%; /* Asegúrate de que el formulario ocupe todo el ancho disponible */
+  display: flex;
+  flex-direction: column; /* Mantiene los elementos en fila horizontal */
+  gap: 1rem; /* Espacio entre los divs */
+  justify-content: space-between; /* Distribuye el espacio entre los elementos */
+  align-items: center; /* Alinea los elementos en la parte superior */
+  flex-wrap: wrap; /* Permite que los elementos se ajusten a la siguiente fila si la pantalla es pequeña */
+  width: 100%; /* Asegúrate de que el formulario ocupe todo el ancho disponible */
 }
 
 .input {
-    display: flex;
-    flex-direction: column; /* Hace que los labels queden encima de los inputs/selects */
-    width: 100%; /* Asegúrate de que cada input/label ocupe el ancho necesario */
-    max-width: 200px; /* Limita el ancho máximo de cada div si lo deseas */
-    padding: 1rem;
+  display: flex;
+  flex-direction: column; /* Hace que los labels queden encima de los inputs/selects */
+  width: 100%; /* Asegúrate de que cada input/label ocupe el ancho necesario */
+  max-width: 200px; /* Limita el ancho máximo de cada div si lo deseas */
+  padding: 1rem;
 }
 
 .input label {
-    margin-bottom: 0.5rem; /* Añade espacio entre el label y el input/select */
-    font-size: 1rem;
-    font-weight: 600;
-    text-align: center;
+  margin-bottom: 0.5rem; /* Añade espacio entre el label y el input/select */
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
 }
 
-.input select, 
+.input select,
 .input input {
-    padding: 0.5rem;
-    font-size: 1rem;
-    border-radius: 0.25rem;
-    border: 1px solid var(--grisRaton);
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--grisRaton);
 }
 
 .contenedorBuscador {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 .botonBuscar {
-    text-decoration: none;
-    color: #FFFFFF;
-    font-family: "Open Sans";
-    font-weight:bold;
-    padding: 3px;
-    background-color: var(--azulCielo);
-    border-radius: 0.5rem;
-    border: none;
-    cursor: pointer;
-    width: 120px;
-    display: flex;
-    justify-content: center;
+  text-decoration: none;
+  color: #ffffff;
+  font-family: "Open Sans";
+  font-weight: bold;
+  padding: 3px;
+  background-color: var(--azulCielo);
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  width: 120px;
+  display: flex;
+  justify-content: center;
 }
-
 
 /* Estilos de las cards */
 .card {
-    font-family: "Poppins" ;
-    display: flex;
-    flex-direction:row;
-    width: 30vw;
-    height: 30vh;
-    align-items: center;
-    border-radius: 7px;
-    background-color: var(--grisClaro);
+  font-family: "Poppins";
+  display: flex;
+  flex-direction: row;
+  width: 30vw;
+  height: 30vh;
+  align-items: center;
+  border-radius: 7px;
+  background-color: var(--grisClaro);
 }
 
 .home {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    width: 100vw;
-    height: auto;
-    flex-wrap: wrap;
-    margin-top: 3%;
-    margin-bottom: 8%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Dos columnas */
+  gap: 20px; /* Espacio entre tarjetas */
+  padding: 20px; /* Espaciado del contenedor */
 }
 
 .home h2 {
-    color: var(--grisRaton);
+  color: var(--grisRaton);
 }
 
 .contLink {
-    display: flex;
-    width: 100%;
+  display: flex;
+  width: 100%;
 }
 
-
 .fotoPerfil {
-    height: 70%;
-    width: 70%;
+  height: 70%;
+  width: 70%;
 }
 
 .datos {
-    font-size:x-small;
-    width: 50%;
-    height: 90%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  font-size: x-small;
+  width: 50%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 /* Estilos del contenido */
 
 .contenidoDash {
-    flex-grow: 1;
-    display: flex;
-	flex-direction: column;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
