@@ -24,55 +24,61 @@ export const Register = () => {
 
   // Guardar un usuario en la BD
   const saveUser = async (e) => {
-    // Prevenir que se actualice la pantalla
     e.preventDefault();
-
-     // Crear un FormData para enviar tanto texto como archivos
-     const formData = new FormData();
-     formData.append("nombre", form.nombre);
-     formData.append("apellido", form.apellido);
-     formData.append("correo_electronico", form.correo_electronico);
-     formData.append("password", form.password);
- 
-     if (form.imagen_perfil) {
-       formData.append("imagen_perfil", form.imagen_perfil); // Añadir el archivo de imagen
-     }
- 
-     // Petición a la API del Backend para guardar usuario en la BD
-     const request = await fetch(Global.url + "user/register", {
-       method: "POST",
-       body: formData, // Usamos FormData en lugar de JSON
-     });
-
-    // Obtener la información retornada por la request
-    const data = await request.json();
-
-    // Verificar si el estado de la respuesta del backend es "created" seteamos la variable saved con "saved" y si no, le asignamos "error", esto es para mostrar por pantalla el resultado del registro del usuario
-    if (request.status === 201 && data.status === "success") {
-      setSaved("saved");
-
-      // Mostrar modal de éxito
-      Swal.fire({
-        title: data.message,
-        icon: "success",
-        confirmButtonText: "Continuar",
-      }).then(() => {
-        // Redirigir después de cerrar el modal
-        console.log("Redirigiendo a /login después de crear el usuario");
-        navigate("cv-registrada");
+  
+    const formData = new FormData();
+    formData.append("nombre", form.nombre);
+    formData.append("apellido", form.apellido);
+    formData.append("correo_electronico", form.correo_electronico);
+    formData.append("password", form.password);
+    
+    if (form.imagen_perfil) {
+      formData.append("file0", form.imagen_perfil);
+    }
+  
+    try {
+      const request = await fetch(Global.url + "user/register", {
+        method: "POST",
+        body: formData,
       });
-    } else {
-      setSaved("error");
-     
-
-      // Mostrar modal de error
+  
+      console.log("Status:", request.status);
+      const data = await request.json();
+      console.log(data);
+  
+      if (request.status === 201 && data.status === "success") {
+        setSaved("saved");
+  
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        console.log("Token guardado:", localStorage.getItem("token"));
+        console.log("Usuario guardado:", localStorage.getItem("user"));
+  
+        Swal.fire({
+          title: data.message,
+          icon: "success",
+          confirmButtonText: "Continuar",
+        }).then(() => {
+          navigate("/cv-registrada");
+        });
+      } else {
+        setSaved("error");
+        Swal.fire({
+          title: data.message || "¡Error en el registro!",
+          icon: "error",
+          confirmButtonText: "Intentar nuevamente",
+        });
+      }
+    } catch (error) {
+      console.error("Error en la solicitud:", error);
       Swal.fire({
-        title: data.message || "¡Error en el registro!",
+        title: "¡Error en la conexión!",
         icon: "error",
         confirmButtonText: "Intentar nuevamente",
       });
     }
   };
+  
 
   return (
     <>
