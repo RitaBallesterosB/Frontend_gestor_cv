@@ -17,7 +17,7 @@ const Card = () => {
           throw new Error("Token no disponible");
         }
 
-        const apiUrl = Global.url + "admin/listar-hojas-de-vida";
+        const apiUrl = Global.url + "admin/listar-all-users";
         const response = await fetch(apiUrl, {
           method: "GET",
           headers: {
@@ -28,14 +28,14 @@ const Card = () => {
 
         if (!response.ok) {
           const errorText = await response.text();
-          throw new Error(`Error al obtener las hojas de vida registradas: ${errorText}`);
+          throw new Error(`Error al obtener los usuarios registrados: ${errorText}`);
         }
 
         const data = await response.json();
         setCardData(data)
 
       } catch (error) {
-        console.error("Error al obtener las hojas de vida registradas:", error);
+        console.error("Error al obtener los usuarios registrados:", error);
       }
     };
 
@@ -50,14 +50,14 @@ const Card = () => {
             <span className={styles.datos}>
               <img
                 className={styles.fotoPerfil}
-                src={user.imagen_perfil} // Aquí podrías usar una imagen del usuario si está disponible
+                src={user.imagen_perfil || avatar} // Aquí podrías usar una imagen del usuario si está disponible
                 alt="foto de perfil"
               />
             </span>
             <span className={styles.datos}>
-              <h2>Nombre: {user.nombre_usuario || avatar}</h2> {/* Accede a 'nombre_usuario' */}
-              <h2>Apellido: {user.apellido_usuario}</h2> {/* Accede a 'apellido_usuario' */}
-              <h2>Ocupación: {user.ocupacion}</h2> {/* Si tienes ocupación, cámbialo aquí */}
+              <h2>Nombre: {user.nombre }</h2> {/* Accede a 'nombre_usuario' */}
+              <h2>Apellido: {user.apellido}</h2> {/* Accede a 'apellido_usuario' */}
+              <h2>Correo Electrónico: {user.correo_electronico}</h2> {/* Si tienes ocupación, cámbialo aquí */}
               <div className={styles.contLink}>
                 <Link className={styles.boton}>Ver más</Link>
               </div>
