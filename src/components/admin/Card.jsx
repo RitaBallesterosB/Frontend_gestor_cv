@@ -50,12 +50,12 @@ const Card = () => {
             <span className={styles.datos}>
               <img
                 className={styles.fotoPerfil}
-                src={avatar} // Aquí podrías usar una imagen del usuario si está disponible
+                src={user.imagen_perfil} // Aquí podrías usar una imagen del usuario si está disponible
                 alt="foto de perfil"
               />
             </span>
             <span className={styles.datos}>
-              <h2>Nombre: {user.nombre_usuario}</h2> {/* Accede a 'nombre_usuario' */}
+              <h2>Nombre: {user.nombre_usuario || avatar}</h2> {/* Accede a 'nombre_usuario' */}
               <h2>Apellido: {user.apellido_usuario}</h2> {/* Accede a 'apellido_usuario' */}
               <h2>Ocupación: {user.ocupacion}</h2> {/* Si tienes ocupación, cámbialo aquí */}
               <div className={styles.contLink}>
