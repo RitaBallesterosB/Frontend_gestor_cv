@@ -57,7 +57,7 @@ const Card = () => {
             <span className={styles.datos}>
               <h2>Nombre: {user.nombre }</h2> {/* Accede a 'nombre_usuario' */}
               <h2>Apellido: {user.apellido}</h2> {/* Accede a 'apellido_usuario' */}
-              <h2>Correo Electrónico: {user.correo_electronico}</h2> {/* Si tienes ocupación, cámbialo aquí */}
+              <h2>Correo Electrónico: {user.correo_electronico}</h2> 
               <div className={styles.contLink}>
                 <Link className={styles.boton}>Ver más</Link>
               </div>

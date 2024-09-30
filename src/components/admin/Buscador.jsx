@@ -5,7 +5,7 @@ import { Global } from "../../helpers/Global";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
-export const Buscador = () => {
+export const Buscador = ({funciones}) => {
   const navigate = useNavigate();
 
   const [saved, setSaved] = useState("not_saved");
@@ -140,8 +140,9 @@ export const Buscador = () => {
       }
 
       const result = await response.json();
-      console.log("Resultados de búsqueda:", result);
+      console.log("Resultados de búsqueda:", result.results);
       setSaved("saved");
+      funciones.onRealizarBusqueda(result.results)
       Swal.fire("Búsqueda exitosa", "Resultados encontrados", "success");
     } catch (error) {
       console.error("Error en la búsqueda:", error);
