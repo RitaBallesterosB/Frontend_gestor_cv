@@ -28,6 +28,8 @@ header {
 }
 
 .btnAdmin {
+  color: var(--negro);
+  text-decoration: none;
   font-family: "Open Sans";
   font-weight: bold;
   padding: 10px;
@@ -178,7 +180,7 @@ header {
   display: flex;
   flex-direction: row;
   width: 30vw;
-  height: 30vh;
+  height: 25vh;
   align-items: center;
   border-radius: 7px;
   background-color: var(--grisClaro);
@@ -187,8 +189,9 @@ header {
 .home {
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* Dos columnas */
-  gap: 20px; /* Espacio entre tarjetas */
-  padding: 20px; /* Espaciado del contenedor */
+  gap: 10px; /* Espacio entre tarjetas */
+  padding: 40px; /* Espaciado del contenedor */
+  margin: 2rem;
 }
 
 .home h2 {
@@ -201,23 +204,38 @@ header {
 }
 
 .fotoPerfil {
-  height: 70%;
-  width: 70%;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--grisRaton); /* Borde de la imagen */
+  align-self: center;
 }
 
 .datos {
   font-size: x-small;
-  width: 50%;
-  height: 90%;
+  width: 90%;
+  height: 80%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  margin: 0;
 }
 
+.infoUser {
+  margin: 0;
+  padding: 0;
+}
 /* Estilos del contenido */
 
 .contenidoDash {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+}
+
+
+/* Estilos de la lista */
+
+.contenedorTable{
+  
 }

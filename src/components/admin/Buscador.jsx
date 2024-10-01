@@ -143,11 +143,21 @@ export const Buscador = ({funciones}) => {
       console.log("Resultados de búsqueda:", result.results);
       setSaved("saved");
       funciones.onRealizarBusqueda(result.results)
-      Swal.fire("Búsqueda exitosa", "Resultados encontrados", "success");
+      Swal.fire({
+        title: "Búsqueda exitosa",
+        icon: "success",
+        showConfirmButton: false,
+        timer:2000
+      });
     } catch (error) {
       console.error("Error en la búsqueda:", error);
       setSaved("error");
-      Swal.fire("Error", "Hubo un problema con la búsqueda", "error");
+      Swal.fire({
+        title: "Hubo un problema con la búsqueda",
+        icon: "error",
+        showConfirmButton: false,
+        timer:2000
+      })
     }
   };
 

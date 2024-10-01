@@ -6,9 +6,7 @@ import avatar from "../../assets/img/default.png";
 
 export const ResultadosBuscador = ({ results }) => {
   const handleCardClick = (id) => {
-    // Redirect to the vehicle's detail page using the id
-    // For example, using react-router-dom:
-    <Link to={`/cv-registrada/${id}`}>
+    <Link to={`/user-data/${id}`}>
       <div className={styles.btCard}>Ver más</div>
     </Link>;
   };
@@ -17,37 +15,36 @@ export const ResultadosBuscador = ({ results }) => {
     <div className={styles.contBusquedaResul}>
       <h2>Resultados de Búsqueda: {results.length}</h2>
       {results && (
-        <div className={styles.home}>
-          {results.map((item) => (
-            // <li key={item.id}>{item.nombre}</li> // Ejemplo de renderización de items
-            <div className={styles.card} key={item._id}>
-              <span className={styles.datos}>
-                <img
-                  className={styles.fotoPerfil}
-                  src={item.imagen_perfil || avatar} // Aquí podrías usar una imagen del usuario si está disponible
-                  alt="foto de perfil"
-                />
-              </span>
-              <span className={styles.datos}>
-                <h2>Nombre: {item.nombre}</h2> {/* Accede a 'nombre_usuario' */}
-                <h2>Apellido: {item.apellido}</h2>{" "}
-                {/* Accede a 'apellido_usuario' */}
-                <h2>Correo Electrónico: {item.correo_electronico}</h2>{" "}
-                {/* Si tienes ocupación, cámbialo aquí */}
-                <div className={styles.contLink}>
-                  <Link
-                    to={`/cv-registrada/${item._id}`}
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Área de Ocupación</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {results.map((item) => (
+              <tr key={item._id}>
+                <td>{item.nombre_usuario}</td>
+                <td>{item.apellido_usuario}</td>
+                <td>{item.area_ocupacion.nombre}</td>
+                <td>
+                 <Link
+                    to={`/user-data/${item._id}`}
                     className={styles.boton}
-                    onClick={() => handleCardClick(item._id)}
+                    onCli ck={() => handleCardClick(item._id)}
                   >
                     Ver más
                   </Link>
-                </div>
-              </span>
-            </div>
-          ))}
-        </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );
+  
 };

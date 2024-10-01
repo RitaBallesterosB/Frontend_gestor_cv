@@ -28,12 +28,13 @@ const Card = () => {
 
         if (!response.ok) {
           const errorText = await response.text();
-          throw new Error(`Error al obtener los usuarios registrados: ${errorText}`);
+          throw new Error(
+            `Error al obtener los usuarios registrados: ${errorText}`
+          );
         }
 
         const data = await response.json();
-        setCardData(data)
-
+        setCardData(data);
       } catch (error) {
         console.error("Error al obtener los usuarios registrados:", error);
       }
@@ -55,11 +56,13 @@ const Card = () => {
               />
             </span>
             <span className={styles.datos}>
-              <h2>Nombre: {user.nombre }</h2> {/* Accede a 'nombre_usuario' */}
-              <h2>Apellido: {user.apellido}</h2> {/* Accede a 'apellido_usuario' */}
-              <h2>Correo Electrónico: {user.correo_electronico}</h2> 
-              <div className={styles.contLink}>
-                <Link className={styles.boton}>Ver más</Link>
+              <div className={styles.infoUser}>
+                <h2>Nombre: {user.nombre}</h2> {/* Accede a 'nombre_usuario' */}
+                <h2>Apellido: {user.apellido}</h2>
+                <h2>Email: {user.correo_electronico}</h2>
+                <div className={styles.contLink}>
+                  <Link className={styles.boton}>Ver más</Link>
+                </div>
               </div>
             </span>
           </div>

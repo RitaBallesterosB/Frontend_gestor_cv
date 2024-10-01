@@ -7,7 +7,6 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./Register.module.css";
 
-
 export const Register = () => {
   // Usamos el hook personalizado useForm para cargar los datos del formulario
   const { form, changed } = useForm({
@@ -25,39 +24,40 @@ export const Register = () => {
   // Guardar un usuario en la BD
   const saveUser = async (e) => {
     e.preventDefault();
-  
+
     const formData = new FormData();
     formData.append("nombre", form.nombre);
     formData.append("apellido", form.apellido);
     formData.append("correo_electronico", form.correo_electronico);
     formData.append("password", form.password);
-    
+
     if (form.imagen_perfil) {
       formData.append("file0", form.imagen_perfil);
     }
-  
+
     try {
       const request = await fetch(Global.url + "user/register", {
         method: "POST",
         body: formData,
       });
-  
+
       console.log("Status:", request.status);
       const data = await request.json();
       console.log(data);
-  
+
       if (request.status === 201 && data.status === "success") {
         setSaved("saved");
-  
+
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
         console.log("Token guardado:", localStorage.getItem("token"));
         console.log("Usuario guardado:", localStorage.getItem("user"));
-  
+
         Swal.fire({
           title: data.message,
           icon: "success",
-          confirmButtonText: "Continuar",
+          showConfirmButton: false,
+          timer: 2000,
         }).then(() => {
           navigate("/cv");
         });
@@ -78,7 +78,6 @@ export const Register = () => {
       });
     }
   };
-  
 
   return (
     <>
@@ -89,7 +88,9 @@ export const Register = () => {
           <div className={styles.subcontenedor}>
             <div className={styles.volverLogin}>
               <h4>¿Ya eres un usuario registrado?</h4>
-              <Link to={"/login"} className={styles.link}>Por favor iniciar sesión</Link>
+              <Link to={"/login"} className={styles.link}>
+                Por favor iniciar sesión
+              </Link>
             </div>
             <p>
               Para continuar, debes tener en cuenta que todos los campos del
@@ -151,9 +152,7 @@ export const Register = () => {
               />
             </div>
             <div className={styles.input}>
-              <label htmlFor="imagen_perfil">
-                Imagen de perfil*:
-              </label>
+              <label htmlFor="imagen_perfil">Imagen de perfil*:</label>
               <input
                 type="file"
                 name="imagen_perfil"
@@ -162,7 +161,11 @@ export const Register = () => {
                 required
               />
             </div>
-            <input className={styles.botonSubmit} type="submit" value="Registrarse" />
+            <input
+              className={styles.botonSubmit}
+              type="submit"
+              value="Registrarse"
+            />
           </form>
         </div>
       </div>

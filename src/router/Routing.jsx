@@ -2,14 +2,14 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Login } from "../components/user/Login";
 import { Register } from "../components/user/Register";
 import { Cv } from "../components/user_cv/Cv";
-import { PublicLayout } from "../components/layouts/public/PublicLayout";
 import { Navigate } from "react-router-dom";
 import { Dashboard } from "../components/admin/Dashboard";
 import { AuthProvider } from "../context/AuthProvider";
 import { CvRegistrada } from "../components/user_cv/CvRegistrada";
 import { CvModificada } from "../components/user_cv/CvModificada";
 import { ReactivarCv } from "../components/user_cv/ReactivarCv";
-import {Logout} from "../components/user/Logout"
+import {Logout} from "../components/user/Logout";
+import {ListarCv} from "../components/admin/ListarCv"
 
 export const Routing = () => {
   return (
@@ -34,6 +34,7 @@ export const Routing = () => {
           {/* Rutas para cargar los componentes del administrador */}
           <Route>
             <Route path="admin" element={<Dashboard />} />
+            <Route path="/listar-cv" element={<ListarCv/>}/>
           </Route>
         </Routes>
       </AuthProvider>
