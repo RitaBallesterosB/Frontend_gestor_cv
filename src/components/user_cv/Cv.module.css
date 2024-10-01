@@ -9,6 +9,7 @@
   min-height: 90vh; /* Ajustado para asegurar cobertura vertical */
   width: 80%; /* Ajustado para un mejor manejo de ancho */
   margin: 0 auto; /* Centrado */
+  
 }
 
 .contenedorCv h1 {
@@ -26,6 +27,10 @@
   padding: 2rem; /* Espacio interno */
   width: 90%; /* Ocupar todo el ancho del contenedor padre */
   max-width: 960px; /* Máximo ancho para controlar en grandes pantallas */
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  
+  
 }
 
 .formCv {
@@ -35,6 +40,7 @@
   gap: 1rem; /* Espacio entre los elementos de grid */
   padding: 1rem; /* Espacio interno */
   justify-content: center;
+  
 }
 
 .contenedorInput .contenedorInput textarea {
@@ -59,7 +65,7 @@
 
 .btnSubmit {
   color: #ffffff;
-  font-family: "Open Sans";
+  font-family: "Roboto";
   font-weight: bold;
   padding: 10px;
   background-color: var(--azulCielo);
@@ -71,6 +77,11 @@
   justify-content: center;
   margin: 1rem auto 0 auto; /* Centrar el botón horizontalmente */
   grid-column: span 2; /* Para que el botón ocupe ambas columnas en el grid */
+  
+}
+.btnSubmit:hover {
+  background-color: var(--azulHover);; /* Cambia el color de fondo al pasar el mouse */
+  color: #ffffff; /* Cambia el color del texto al pasar el mouse */
 }
 
 .userphoto {
@@ -121,3 +132,21 @@ input[type="checkbox"] {
     height: 85vh; /* Alto completo de la ventana */
     width: 100%; 
   }
+
+  .reactivarCvContainer, title {
+    background-color: var(--gris); /* Color de fondo de la tarjeta */
+    display: flex;
+    flex-direction: column; /* Alineación vertical */
+    align-items: center; /* Centrar contenido */
+    justify-content: center; /* Centrar contenido */
+    text-align: center;
+    padding: 4rem; /* Espacio interno */
+    width: 90%; /* Ocupar todo el ancho del contenedor padre */
+    max-width: 600px; /* Ancho máximo para la tarjeta */
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); /* Sombra de la tarjeta */
+    border-radius: 10px; /* Bordes redondeados */
+    margin: 1rem 0; /* Margen superior e inferior */
+  }
+
+ 
+  

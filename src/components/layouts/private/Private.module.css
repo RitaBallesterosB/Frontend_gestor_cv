@@ -78,7 +78,7 @@
 .boton {
     text-decoration: none;
     color: #FFFFFF;
-    font-family: "Open Sans";
+    font-family: "Roboto";
     font-weight:bold;
     padding: 10px;
     background-color: var(--azulCielo);
@@ -89,4 +89,9 @@
     display: flex;
     justify-content: center;
     margin-top: 1rem;
+}
+
+.boton:hover{
+    background-color: var(--azulHover);; /* Cambia el color de fondo al pasar el mouse */
+    color: #ffffff; /* Cambia el color del texto al pasar el mouse */
 }

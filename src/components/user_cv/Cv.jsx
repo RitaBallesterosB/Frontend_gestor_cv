@@ -107,19 +107,23 @@ export const Cv = () => {
     setAptitudes(selectedTipo ? selectedTipo.aptitudes : []);
   };
 
-  // Efecto para precargar los datos del usuario
-  useEffect(() => {
-    if (
-      auth &&
-      (form.nombre_usuario !== auth.nombre ||
-        form.apellido_usuario !== auth.apellido ||
-        form.correo_electronico !== auth.correo_electronico)
-    ) {
+ 
+// Efecto para precargar los datos del usuario SE AJUSTÓ CAUSABA UN BUCLE, por eso tocaba recargar la página para que guardara la foto e iniciales Cada vez que llamas a resetForm, estás actualizando el estado que está siendo observado por useEffect. Si este estado no cambia realmente, el efecto se disparará repetidamente, lo que puede resultar en un bucle infinito.
+
+// Modificación del useEffect: Cambia la lógica del useEffect que precarga los datos del usuario para que solo se ejecute cuando haya cambios reales en auth. Aquí tienes una versión corregida:
+
+useEffect(() => {
+  if (auth) {
+    const shouldResetForm =
+      form.nombre_usuario !== auth.nombre ||
+      form.apellido_usuario !== auth.apellido ||
+      form.correo_electronico !== auth.correo_electronico;
+
+    if (shouldResetForm) {
       resetForm({
         nombre_usuario: auth.nombre || "",
         apellido_usuario: auth.apellido || "",
         correo_electronico: auth.correo_electronico || "",
-
         celular: "",
         tipo_documento: "",
         numero_dto: "",
@@ -132,7 +136,9 @@ export const Cv = () => {
         aptitudes: [],
       });
     }
-  }, [auth, resetForm]);
+  }
+}, [auth, form.nombre_usuario, form.apellido_usuario, form.correo_electronico, resetForm]);
+
 
   const [municipios, setMunicipios] = useState([]);
 

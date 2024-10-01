@@ -10,6 +10,7 @@
     width: 30vw;
     margin-top: 2rem;
     margin-bottom: 2rem;
+    border-radius: 10px;
 }
 
 .login {
@@ -40,7 +41,7 @@
 
 .botonSubmit {
     color: #FFFFFF;
-    font-family: "Open Sans";
+    font-family: "Roboto";
     font-weight:bold;
     padding: 10px;
     background-color: var(--azulCielo);
@@ -51,6 +52,11 @@
     display: flex;
     justify-content: center;
     margin-top: 1rem;
+}
+
+.botonSubmit:hover{
+    background-color: var(--azulHover);; /* Cambia el color de fondo al pasar el mouse */
+    color: #ffffff; /* Cambia el color del texto al pasar el mouse */
 }
 
 .link{

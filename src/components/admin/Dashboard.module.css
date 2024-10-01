@@ -26,12 +26,13 @@ header {
   align-items: center; /* Centra horizontalmente */
   justify-content: center; /* Centra verticalmente */
   height: calc(100vh - 15vh); /* Ajusta la altura según sea necesario */
+  
 }
 
 .btnAdmin {
   color: var(--negro);
   text-decoration: none;
-  font-family: "Open Sans";
+  font-family: "Roboto";
   font-weight: bold;
   padding: 10px;
   background-color: var(--grisMedio);
@@ -43,6 +44,11 @@ header {
   justify-content: center;
   margin-top: 1rem;
 }
+ .btnAdmin:hover {
+  background-color: var(--azulHover);; /* Cambia el color de fondo al pasar el mouse */
+  color: #ffffff; /* Cambia el color del texto al pasar el mouse */
+
+ }
 
 /* Navegación principal (centrada) */
 .navpriv {
@@ -68,6 +74,7 @@ header {
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--grisRaton); /* Borde de la imagen */
+  
 }
 
 .username {
@@ -85,7 +92,7 @@ header {
 .boton {
   text-decoration: none;
   color: #ffffff;
-  font-family: "Open Sans";
+  font-family: "Roboto";
   font-weight: bold;
   padding: 10px;
   background-color: var(--azulCielo);
@@ -96,6 +103,11 @@ header {
   display: flex;
   justify-content: center;
   margin-top: 1rem;
+}
+ 
+.boton:hover {
+  background-color: var(--azulHover);; /* Cambia el color de fondo al pasar el mouse */
+  color: #ffffff; /* Cambia el color del texto al pasar el mouse */
 }
 
 .headerAdmin {
@@ -142,7 +154,7 @@ header {
 
 .input label {
   margin-bottom: 0.5rem; /* Añade espacio entre el label y el input/select */
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   text-align: center;
 }
@@ -150,7 +162,7 @@ header {
 .input select,
 .input input {
   padding: 0.5rem;
-  font-size: 1rem;
+  font-size: 1.2rem;
   border-radius: 0.25rem;
   border: 1px solid var(--grisRaton);
 }
@@ -165,7 +177,7 @@ header {
 .botonBuscar {
   text-decoration: none;
   color: #ffffff;
-  font-family: "Open Sans";
+  font-family: "Roboto";
   font-weight: bold;
   padding: 3px;
   background-color: var(--azulCielo);
@@ -176,24 +188,29 @@ header {
   display: flex;
   justify-content: center;
 }
+.botonBuscar:hover {
+  background-color: var(--azulHover);; /* Cambia el color de fondo al pasar el mouse */
+  color: #ffffff; /* Cambia el color del texto al pasar el mouse */
+}
 
 /* Estilos de las cards */
 .card {
-  font-family: "Poppins";
+  font-family: "Roboto";
   display: flex;
   flex-direction: row;
   width: 30vw;
   height: 25vh;
   align-items: center;
-  border-radius: 7px;
   background-color: var(--grisClaro);
+  box-shadow: 4px 4px 10px rgba(134, 133, 133, 0.3);
+  border-radius: 10px;
 }
 
 .home {
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* Dos columnas */
-  gap: 10px; /* Espacio entre tarjetas */
-  padding: 40px; /* Espaciado del contenedor */
+  gap: 20px; /* Espacio entre tarjetas */
+  padding: 30px; /* Espaciado del contenedor */
   margin: 2rem;
 }
 
@@ -207,16 +224,16 @@ header {
 }
 
 .fotoPerfil {
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--grisRaton); /* Borde de la imagen */
+  border: 2px solid rgb(213, 213, 213); /* Borde de la imagen */
   align-self: center;
 }
 
 .datos {
-  font-size: x-small;
+  font-size: small;
   width: 90%;
   height: 80%;
   display: flex;
@@ -244,13 +261,16 @@ header {
   margin-bottom: 15vh;
   padding: 2%;
   margin-left: 20%;
+  
 }
 
 .listarCvs h2 {
-  color: var(--grisRaton);
-  font-size: 24px;
-  font-weight: bold;
+  color: var(--azulHover);
+  font-size: 26px;
+  font-weight: 600;
   margin-left: 0%;
+  padding-top:15px ;
+  padding-bottom:25px ;
   text-align: center;
 }
 
@@ -258,6 +278,9 @@ header {
   flex-grow: 1;
   border-collapse: collapse;
   width: 70vw;
+ 
+  
+  ; /* Agrega un borde a la tabla */
 }
 
 .listarCvs th {
@@ -266,13 +289,13 @@ header {
   font-size: 20px;
   font-weight: bold;
   height: 45px;
-  border-bottom: 4px solid var(--azulCielo);
+  
+
 }
 
-.listarCvs td {
-  font-size: 14px;
-  text-align: center;
-  color: var(--grisRaton);
-  font-weight: 600;
-  margin: 10px;
+
+.listarCvs td { /* Borde para las celdas */
+  border: 2px solid var(--grisClaro); /* Agrega un borde a cada celda */
+  padding: 10px; /* Espaciado interno en celdas */
+  text-align: center; /* Alineación del texto */
 }

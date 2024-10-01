@@ -61,9 +61,9 @@ export const ListarCv = () => {
         </div>
         {listCv && (
           <table>
-            <thead>
+            <thead  >
               <tr>
-                <th>Nombre</th>
+                <th >Nombre</th>
                 <th>Apellido</th>
                 <th>Ocupación</th>
                 <th>Área ocupación</th>
