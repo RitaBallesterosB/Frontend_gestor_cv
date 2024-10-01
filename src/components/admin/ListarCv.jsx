@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import styles from "./Dashboard.module.css";
 import { Link } from "react-router-dom";
-import Swal from "sweetalert2";
-import avatar from "../../assets/img/default.png";
+import { useNavigate } from 'react-router-dom';
 import { Global } from "../../helpers/Global";
 import { HeaderAdmin } from "./HeaderAdmin";
 import { SideBar } from "./SideBar";
 
 export const ListarCv = () => {
   const [listCv, setlistCv] = useState([]);
+  const navigate = useNavigate();
+  const handleGoBack = () => {
+    navigate(-1);
+  };
 
   useEffect(() => {
     const fetchListCv = async () => {
@@ -37,7 +40,7 @@ export const ListarCv = () => {
 
         const data = await response.json();
         setlistCv(data);
-        console.log(data)
+        console.log(data);
       } catch (error) {
         console.error("Error al obtener las hojas de vida registradas:", error);
       }
@@ -46,43 +49,47 @@ export const ListarCv = () => {
   }, []);
 
   return (
-    <div >
-      <HeaderAdmin/>
-      <SideBar/>
+    <div>
+      <HeaderAdmin />
+      <SideBar />
       <div className={styles.listarCvs}>
-      <h2>Lista de hojas de vida registradas</h2>
-      {listCv && (
-      <table >
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Ocupación</th>
-            <th>Área ocupación</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {listCv.map((item) => (
-          <tr key={item._id}>
-            <td>{item.nombre_usuario}</td>
-            <td>{item.apellido_usuario}</td>
-            <td>{item.ocupacion}</td>
-            <td>{item.area_ocupacion.nombre}</td>
-            <td>
-                 <Link
-                    to={`/user-data/${item._id}`}
-                    className={styles.boton}
-                  >
-                    Ver más
-                  </Link>
-            </td>
-          </tr>
-          ))}
-        </tbody>
-
-      </table>
-      )}
+        <div>
+          <button className={styles.boton} onClick={handleGoBack}>
+            <i className="fa-solid fa-arrow-left">   Anterior</i>
+          </button>
+          <h2>Lista de hojas de vida registradas</h2>
+        </div>
+        {listCv && (
+          <table>
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Ocupación</th>
+                <th>Área ocupación</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {listCv.map((item) => (
+                <tr key={item._id}>
+                  <td>{item.nombre_usuario}</td>
+                  <td>{item.apellido_usuario}</td>
+                  <td>{item.ocupacion}</td>
+                  <td>{item.area_ocupacion.nombre}</td>
+                  <td>
+                    <Link
+                      to={`/ver-cv-registrada/${item._id}`}
+                      className={styles.boton}
+                    >
+                      Ver más
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

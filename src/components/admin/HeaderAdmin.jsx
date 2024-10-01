@@ -5,7 +5,6 @@ export const HeaderAdmin = () => {
   return (
     <header>
       <div className={styles.headerAdmin}>
-        
         {/* Aquí integramos el NavPriv en el Header */}
         <NavAdmin />
       </div>

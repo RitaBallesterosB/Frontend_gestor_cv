@@ -10,6 +10,7 @@ import { CvModificada } from "../components/user_cv/CvModificada";
 import { ReactivarCv } from "../components/user_cv/ReactivarCv";
 import {Logout} from "../components/user/Logout";
 import {ListarCv} from "../components/admin/ListarCv"
+import { VerCvRegistrada } from "../components/admin/VerCvRegistrada";
 
 export const Routing = () => {
   return (
@@ -35,6 +36,7 @@ export const Routing = () => {
           <Route>
             <Route path="admin" element={<Dashboard />} />
             <Route path="/listar-cv" element={<ListarCv/>}/>
+            <Route path="/ver-cv-registrada/:id" element={<VerCvRegistrada/>}/>
           </Route>
         </Routes>
       </AuthProvider>

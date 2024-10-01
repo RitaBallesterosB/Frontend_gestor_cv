@@ -61,7 +61,12 @@ const Card = () => {
                 <h2>Apellido: {user.apellido}</h2>
                 <h2>Email: {user.correo_electronico}</h2>
                 <div className={styles.contLink}>
-                  <Link className={styles.boton}>Ver más</Link>
+                  <Link
+                    to={`/ver-cv-registrada/${user._id}`}
+                    className={styles.boton}
+                  >
+                    Ver más
+                  </Link>
                 </div>
               </div>
             </span>

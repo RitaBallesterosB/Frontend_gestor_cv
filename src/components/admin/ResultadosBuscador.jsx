@@ -5,11 +5,6 @@ import Swal from "sweetalert2";
 import avatar from "../../assets/img/default.png";
 
 export const ResultadosBuscador = ({ results }) => {
-  const handleCardClick = (id) => {
-    <Link to={`/cv-registrada/${id}`}>
-      <div className={styles.btCard}>Ver más</div>
-    </Link>;
-  };
 
   return (
     <div className={styles.contBusquedaResul}>
@@ -26,16 +21,16 @@ export const ResultadosBuscador = ({ results }) => {
                 />
               </span>
               <span className={styles.datos}>
-                <h2>Nombre: {item.nombre_usuario}</h2> {/* Accede a 'nombre_usuario' */}
+                <h2>Nombre: {item.nombre_usuario}</h2>{" "}
+                {/* Accede a 'nombre_usuario' */}
                 <h2>Apellido: {item.apellido_usuario}</h2>{" "}
                 {/* Accede a 'apellido_usuario' */}
                 <h2>Área ocupación: {item.area_ocupacion.nombre}</h2>{" "}
                 {/* Si tienes ocupación, cámbialo aquí */}
                 <div className={styles.contLink}>
                   <Link
-                    to={`/cv-registrada/${item._id}`}
+                    to={`/ver-cv-registrada/${item._id}`}
                     className={styles.boton}
-                    onClick={() => handleCardClick(item._id)}
                   >
                     Ver más
                   </Link>
