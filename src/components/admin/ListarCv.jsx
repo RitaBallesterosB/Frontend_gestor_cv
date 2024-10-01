@@ -49,14 +49,17 @@ export const ListarCv = () => {
     <div >
       <HeaderAdmin/>
       <SideBar/>
+      <div className={styles.listarCvs}>
       <h2>Lista de hojas de vida registradas</h2>
       {listCv && (
-      <table className={styles.contenedorTable}>
+      <table >
         <thead>
           <tr>
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Ocupación</th>
+            <th>Área ocupación</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -65,12 +68,22 @@ export const ListarCv = () => {
             <td>{item.nombre_usuario}</td>
             <td>{item.apellido_usuario}</td>
             <td>{item.ocupacion}</td>
+            <td>{item.area_ocupacion.nombre}</td>
+            <td>
+                 <Link
+                    to={`/user-data/${item._id}`}
+                    className={styles.boton}
+                  >
+                    Ver más
+                  </Link>
+            </td>
           </tr>
           ))}
         </tbody>
 
       </table>
       )}
+      </div>
     </div>
   );
 };

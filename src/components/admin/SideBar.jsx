@@ -4,7 +4,15 @@ import { NavLink } from "react-router-dom";
 export const SideBar = () => {
   return (
     <div className={styles.contenedorPrincipal}>
-      <div className={styles.contenedorSidebar}>
+      
+      <a href="#">
+          <img
+            src="src/assets/img/logos/Logo_sinfondo.png"
+            width="180"
+            height="100"
+          />
+        </a>
+        <div className={styles.contenedorSidebar}>
         <h2>Menú Admin</h2>
         <NavLink to="/listar-cv" className={styles.btnAdmin}>
             Listar hojas de vida

@@ -13,10 +13,13 @@ header {
 
 .contenedorPrincipal {
   background-color: var(--grisClaro);
-  float: left;
   display: flex;
   flex-direction: column;
   height: 100vh;
+  width: 20vw; /* Ajusta el ancho del sidebar */
+  position: fixed; /* Sidebar fijo en la izquierda */
+  top: 0;
+  left: 0;
 }
 
 .contenedorSidebar {
@@ -47,8 +50,10 @@ header {
 .navpriv {
   flex-grow: 1;
   display: flex;
-  justify-content: flex-end; /* Menú centrado */
-  align-items: center; /* Alinea los enlaces del menú verticalmente */
+  justify-content: flex-end; 
+  align-items: center;
+  margin-right: 3rem;
+  margin-top: 2rem;
 }
 
 /* Estilo para el perfil de usuario */
@@ -97,7 +102,7 @@ header {
 
 .headerAdmin {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center; /* Asegura que todos los elementos estén alineados verticalmente */
   background-color: var(--grisClaro); /* Fondo gris claro */
   width: 100vw;
@@ -233,9 +238,42 @@ header {
   flex-direction: column;
 }
 
-
 /* Estilos de la lista */
 
-.contenedorTable{
-  
+/* Estilos generales para la tabla */
+.listarCvs {
+  margin-bottom: 15vh;
+  padding: 2%;
+  margin-left: 20%;
+}
+
+.listarCvs h2 {
+  color: var(--grisRaton);
+  font-size: 24px;
+  font-weight: bold;
+  margin-left: 0%;
+  text-align: center;
+}
+
+.listarCvs table {
+  flex-grow: 1;
+  border-collapse: collapse;
+  width: 70vw;
+}
+
+.listarCvs th {
+  background-color: var(--grisClaro);
+  color: var(--azulCielo);
+  font-size: 20px;
+  font-weight: bold;
+  height: 45px;
+  border-bottom: 4px solid var(--azulCielo);
+}
+
+.listarCvs td {
+  font-size: 14px;
+  text-align: center;
+  color: var(--grisRaton);
+  font-weight: 600;
+  margin: 10px;
 }
