@@ -9,7 +9,7 @@
   min-height: 90vh; /* Ajustado para asegurar cobertura vertical */
   width: 80%; /* Ajustado para un mejor manejo de ancho */
   margin: 0 auto; /* Centrado */
-  
+  margin-bottom: 30%;
 }
 
 .contenedorCv h1 {
@@ -29,8 +29,7 @@
   max-width: 960px; /* Máximo ancho para controlar en grandes pantallas */
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
   border-radius: 10px;
-  
-  
+  margin-bottom: 10%;
 }
 
 .formCv {

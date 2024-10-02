@@ -1,4 +1,7 @@
 /* Estilos del login */
+body {
+    padding-bottom: 50%;
+}
 
 .contenedorLogin {
     margin: auto;
@@ -9,7 +12,7 @@
     height: 70vh ;
     width: 30vw;
     margin-top: 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 10%;
     border-radius: 10px;
 }
 

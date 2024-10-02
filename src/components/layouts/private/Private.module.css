@@ -50,6 +50,7 @@
 
 /* Estilo para el perfil de usuario */
 .navRight {
+    margin-right: 2rem;
     display: flex;
     align-items: center; /* Alinea la imagen y el nombre del usuario verticalmente */
     gap: 1.5rem; /* Espacio entre la foto y el nombre */

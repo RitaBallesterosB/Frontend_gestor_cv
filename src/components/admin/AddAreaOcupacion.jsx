@@ -1,11 +1,9 @@
 import { useState } from "react";
-import Swal from "sweetalert2";  // SweetAlert
-import styles from "./Dashboard.module.css"; 
+import Swal from "sweetalert2"; // SweetAlert
+import styles from "./Dashboard.module.css";
 import { HeaderAdmin } from "./HeaderAdmin";
 import { SideBar } from "./SideBar";
 import { Link } from "react-router-dom";
-
-
 
 export const AddAreaOcupacion = () => {
   const [nombreArea, setNombreArea] = useState(""); // Estado para controlar el nombre del área
@@ -20,14 +18,17 @@ export const AddAreaOcupacion = () => {
         throw new Error("Token no disponible");
       }
 
-      const response = await fetch("http://localhost:3900/api/admin/area-ocupacion", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token, // Autorización con el token
-        },
-        body: JSON.stringify({ nombre: nombreArea }), // Enviar el nombre del área en el cuerpo de la petición
-      });
+      const response = await fetch(
+        "http://localhost:3900/api/admin/area-ocupacion",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token, // Autorización con el token
+          },
+          body: JSON.stringify({ nombre: nombreArea }), // Enviar el nombre del área en el cuerpo de la petición
+        }
+      );
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -44,7 +45,6 @@ export const AddAreaOcupacion = () => {
         showConfirmButton: true,
         timer: 1500,
       });
-
     } catch (error) {
       console.error("Error al agregar el área de ocupación:", error);
 
@@ -66,7 +66,7 @@ export const AddAreaOcupacion = () => {
 
       <div className={styles.addAreaOcupacionContainer}>
         <h2>Agregar área de ocupación</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className={styles.formAdd}>
           <div className={styles.inputContainer}>
             <label htmlFor="nombreArea">Nombre del área:</label>
             <input
@@ -82,12 +82,9 @@ export const AddAreaOcupacion = () => {
             Agregar área Ocupacion
           </button>
 
-          <div>
-            <Link to={`/admin`} className={styles.boton}>
-              Volver al Buscador
-            </Link>
-          </div>
-          
+          <Link to={`/admin`} className={styles.btnAdminAdd}>
+            Volver al Buscador
+          </Link>
         </form>
       </div>
     </div>
