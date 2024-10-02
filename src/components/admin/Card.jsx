@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import avatar from "../../assets/img/default.png";
 import { Global } from "../../helpers/Global";
 
-const Card = () => {
+export const  Card = ({ reload }) => { // Aceptar el prop reload
   const [cardData, setCardData] = useState([]);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const Card = () => {
     };
 
     fetchCardData();
-  }, []);
+  }, [reload]); // Añadir reload como dependencia
 
   return (
     <div className={styles.home}>
@@ -57,7 +57,7 @@ const Card = () => {
             </span>
             <span className={styles.datos}>
               <div className={styles.infoUser}>
-                <h2>Nombre: {user.nombre}</h2> {/* Accede a 'nombre_usuario' */}
+                <h2>Nombre: {user.nombre}</h2>
                 <h2>Apellido: {user.apellido}</h2>
                 <h2>Email: {user.correo_electronico}</h2>
                 <div className={styles.contLink}>
@@ -79,4 +79,4 @@ const Card = () => {
   );
 };
 
-export default Card;
+

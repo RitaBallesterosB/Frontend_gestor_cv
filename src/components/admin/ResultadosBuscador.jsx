@@ -29,7 +29,7 @@ export const ResultadosBuscador = ({ results }) => {
                 {/* Si tienes ocupación, cámbialo aquí */}
                 <div className={styles.contLink}>
                   <Link
-                    to={`/ver-cv-registrada/${item._id}`}
+                    to={`/ver-cv-registrada/${item.user_id}`}
                     className={styles.boton}
                   >
                     Ver más

@@ -16,7 +16,9 @@ export const SideBar = () => {
         <NavLink to="/listar-cv" className={styles.btnAdmin}>
           Listar hojas de vida
         </NavLink>
-        <button className={styles.btnAdmin}>Agregar área de ocupación</button>
+        <NavLink to="/agregar-area-ocupacion" className={styles.btnAdmin}>
+        Agregar área de ocupación
+        </NavLink>
         <button className={styles.btnAdmin}>
           Agregar tipo de área de ocupación
         </button>

@@ -1,5 +1,5 @@
 import { Buscador } from "./Buscador";
-import Card from "./Card";
+import {Card} from "./Card";
 import styles from './Dashboard.module.css'
 import { ResultadosBuscador } from "./ResultadosBuscador";
 import { useState } from "react";

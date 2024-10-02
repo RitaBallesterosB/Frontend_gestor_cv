@@ -54,9 +54,16 @@ export const ListarCv = () => {
       <SideBar />
       <div className={styles.listarCvs}>
         <div>
-          <button className={styles.boton} onClick={handleGoBack}>
+          {/* <button className={styles.boton} onClick={handleGoBack}>
             <i className="fa-solid fa-arrow-left">   Anterior</i>
-          </button>
+          </button> */}
+          <Link
+                      to={`/admin`}
+                      className={styles.boton}
+                    >   
+                      Volver
+                    </Link>
+
           <h2>Lista de hojas de vida registradas</h2>
         </div>
         {listCv && (
